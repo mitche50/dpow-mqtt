@@ -114,7 +114,7 @@ def on_message(client, userdata, msg):
                                          work_difficulty, work_multiplier, time_difference])
 
         elif topic[0] == 'statistics':
-            stats = json.loads(msg.payload)
+            stats = json.loads(msg.payload.decode())
             logger.info("Stats call received: ", stats)
             try:
                 db.set_services(stats['services']['public'])
@@ -143,6 +143,7 @@ def on_message(client, userdata, msg):
 
     except Exception as e:
         logger.info("Error: {}".format(e))
+
 
 if __name__ == "__main__":
     db.db_init()
