@@ -1,0 +1,8 @@
+configparser
+flask
+gunicorn
+mysqlclient
+paho-mqtt
+psycopg2
+redis
+requests

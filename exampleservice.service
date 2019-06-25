@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve the DPoW Dashboard
+After=network.target
+
+[Service]
+User={YOUR_USERNAME}
+Group={YOUR_GROUP}
+WorkingDirectory=/home/{YOUR_USERNAME}/dpow-mqtt
+Environment="PATH=/home/{YOUR_USERNAME}/dpow-mqtt/venv/bin"
+ExecStart=/home/{YOUR_USERNAME}/dpow-mqtt/venv/bin/gunicorn --workers 3 --bind unix:dpowdash.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target
