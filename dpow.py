@@ -69,7 +69,7 @@ pow_day_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
                        " FROM requests  "
                        " WHERE work_type = 'ondemand' "
                        " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t3 "
-                       " on t1.ts = t3.ts;")
+                       " on t1.ts = t3.ts ORDER BY ts ASC;")
 pow_hour_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
                        "FROM "
                        "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as overall "
@@ -86,7 +86,7 @@ pow_hour_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
                        " FROM requests  "
                        " WHERE work_type = 'ondemand' "
                        " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t3 "
-                       " on t1.ts = t3.ts;")
+                       " on t1.ts = t3.ts ORDER BY ts ASC;")
 pow_minute_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
                          "FROM "
                          "(SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as overall "
@@ -103,7 +103,7 @@ pow_minute_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
                          " FROM requests  "
                          " WHERE work_type = 'ondemand' "
                          " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t3 "
-                         " on t1.ts = t3.ts;")
+                         " on t1.ts = t3.ts ORDER BY ts ASC;")
 avg_combined_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
                      "FROM "
                      "(SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, avg(response_length) as overall "
@@ -120,7 +120,7 @@ avg_combined_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
                      "FROM requests "
                      "WHERE work_type = 'ondemand' "
                      "AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t3 "
-                     "on t1.ts = t3.ts;")
+                     "on t1.ts = t3.ts ORDER BY ts ASC;")
 avg_overall_call = ("SELECT avg(response_length) FROM requests "
                     "WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR")
 
