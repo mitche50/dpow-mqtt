@@ -180,9 +180,23 @@ def create_triggers():
     logger.info("Triggers set.")
 
 
-def get_db_data_new(db_call, values):
+def get_db_data(db_call):
     """
-    Retrieve data from DB
+    Retrieve data from DB with no values
+    """
+    db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
+                         charset="utf8mb4")
+    db_cursor = db.cursor()
+    db_cursor.execute(db_call)
+    db_data = db_cursor.fetchall()
+    db_cursor.close()
+    db.close()
+    return db_data
+
+
+def get_db_data_values(db_call, values):
+    """
+    Retrieve data from DB with values
     """
     db = MySQLdb.connect(host=DB_HOST, port=3306, user=DB_USER, passwd=DB_PW, db=DB_SCHEMA, use_unicode=True,
                          charset="utf8mb4")

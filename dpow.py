@@ -1,20 +1,11 @@
 from datetime import datetime
-from flask import Flask
+from flask import Flask, render_template, request
 from logging.handlers import TimedRotatingFileHandler
 
-import configparser
-import json
 import logging
 import os
-import paho.mqtt.client as mqtt
-import redis
-import requests
 
 import modules.db as db
-
-# Read config and parse constants
-config = configparser.ConfigParser()
-config.read('{}/config.ini'.format(os.getcwd()))
 
 logger = logging.getLogger("dpow_log")
 logger.setLevel(logging.INFO)
@@ -25,137 +16,200 @@ handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}.log'.format(os.getcwd(),
                                    backupCount=5)
 logger.addHandler(handler)
 
-NODE_IP = config.get('nano', 'node_ip')
-POW_USER = config.get('pow', 'username')
-POW_PW = config.get('pow', 'password')
-MQTT_IP = config.get('pow', 'mqtt_ip')
-MQTT_PORT = int(config.get('pow', 'mqtt_port'))
-REDIS_HOST = config.get('redis', 'host')
-REDIS_PORT = int(config.get('redis', 'port'))
-REDIS_DB = int(config.get('redis', 'db'))
-
 app = Flask(__name__)
 
+pow_count_call = "SELECT count(hash) FROM requests WHERE response_ts >= NOW() - INTERVAL 24 HOUR;"
+pow_ratio_call = ("SELECT work_type, count(work_type) FROM requests"
+                  " WHERE response_ts >= NOW() - INTERVAL 24 HOUR"
+                  " GROUP BY work_type order by work_type ASC;")
+service_count_call = "SELECT count(service_name) FROM services WHERE service_name != 'private';"
+unlisted_service_call = "SELECT private_count FROM services WHERE service_name = 'private';"
+client_count_call = "SELECT count(client_id) FROM clients WHERE last_action >= NOW() - INTERVAL 60 MINUTE;"
+services_24hr_call = ("SELECT ((SELECT service_count FROM service_log WHERE date_desc = 'today') "
+                      "- (SELECT service_count FROM service_log WHERE date_desc = 'yesterday'))")
+clients_24hr_call = ("SELECT ((SELECT client_count FROM client_log WHERE date_desc = 'today') "
+                     "- (SELECT client_count FROM client_log WHERE date_desc = 'yesterday'))")
+work_24hr_call = ("SELECT (SELECT count(hash) FROM requests WHERE response_ts >= NOW() - INTERVAL 1 DAY) "
+                  "- (SELECT count(hash) FROM requests WHERE response_ts < NOW() - INTERVAL 1 DAY "
+                  "   AND response_ts >= NOW() - INTERVAL 2 DAY)")
+diff_24hr_call = ("SELECT round((SELECT avg(multiplier) FROM requests WHERE response_ts >= NOW() - INTERVAL 1 DAY) "
+                  "- (SELECT avg(multiplier) FROM requests WHERE response_ts < NOW() - INTERVAL 1 DAY "
+                  "   AND response_ts >= NOW() - INTERVAL 2 DAY),2)")
+services_call = ("SELECT service_name, service_website, (service_ondemand + service_precache) as pow "
+                 "FROM services "
+                 "WHERE service_name != 'private' "
+                 "ORDER BY pow DESC")
+clients_call = ("SELECT t1.client, t1.precache, t2.ondemand FROM "
+                "   (SELECT client, count(client) as precache FROM "
+                "   requests WHERE work_type = 'precache' GROUP BY client) as t1"
+                " join "
+                "   (SELECT client, count(client) as ondemand FROM "
+                "   requests WHERE work_type = 'ondemand' GROUP BY client) as t2"
+                " on t1.client = t2.client"
+                " ORDER BY precache + ondemand DESC;")
+avg_difficulty_call = "SELECT round(avg(multiplier),2) FROM requests WHERE response_ts >= NOW() - INTERVAL 30 MINUTE"
+avg_requests_call = ("SELECT date_format(response_ts, '%Y-%m-%d'), count(hash) FROM requests "
+                     "WHERE response_ts >= NOW() - INTERVAL 1 MONTH "
+                     "GROUP BY date_format(response_ts, '%Y-%m-%d')")
+hour_p_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, work_type, count(work_type) "
+               "FROM requests "
+               "WHERE work_type = 'precache' AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts;")
+hour_o_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, work_type, count(work_type) "
+               "FROM requests "
+               "WHERE work_type = 'ondemand' AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts;")
+day_p_call = ("SELECT date_format(response_ts, '%Y-%m-%d') as ts, work_type, count(work_type) "
+              "FROM requests "
+              "WHERE work_type = 'precache' AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts;")
+day_o_call = ("SELECT date_format(response_ts, '%Y-%m-%d') as ts, work_type, count(work_type) "
+              "FROM requests "
+              "WHERE work_type = 'ondemand' AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts;")
+minute_p_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, work_type, count(work_type) "
+                 "FROM requests "
+                 "WHERE work_type = 'precache' AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts")
+minute_o_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, work_type, count(work_type) "
+                 "FROM requests "
+                 "WHERE work_type = 'ondemand' AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts")
+pow_day_total_call = ("SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(hash) FROM requests "
+                      "WHERE date_format(response_ts, '%Y-%m-%d') >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH "
+                      "GROUP BY ts;")
+pow_hour_total_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(hash) FROM requests "
+                       "WHERE date_format(response_ts, '%Y-%m-%d %H') >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR "
+                       "GROUP BY ts;")
+pow_minute_total_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(hash) FROM requests "
+                         "WHERE date_format(response_ts, '%Y-%m-%d %H:%i') >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE "
+                         "GROUP BY ts;")
+avg_p_time_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, work_type, avg(response_length) "
+                   "FROM requests WHERE work_type = 'precache' "
+                   "AND date_format(response_ts, '%Y-%m-%d %H') >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR "
+                   "GROUP BY ts, work_type;")
+avg_o_time_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, work_type, avg(response_length) "
+                   "FROM requests WHERE work_type = 'ondemand' "
+                   "AND date_format(response_ts, '%Y-%m-%d %H') >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR "
+                   "GROUP BY ts, work_type;")
+avg_combined_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, avg(response_length) "
+                     "FROM requests "
+                     "WHERE date_format(response_ts, '%Y-%m-%d %H') >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR "
+                     "GROUP BY ts, work_type;")
+avg_overall_call = ("SELECT avg(response_length) FROM requests "
+                    "WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR")
 
-def get_work_mult(work_value, work_hash):
-    """
-    When a result message is received, retrieve the work multiplier
-    """
-    data = {
-        "action": "work_validate",
-        "work": work_value,
-        "hash": work_hash
-    }
-    json_request = json.dumps(data)
-    r = requests.post('{}'.format(NODE_IP), data=json_request)
-    rx = r.json()
 
-    return rx
+@app.route("/")
+@app.route("/index")
+def index():
+    # Get current POW count
+    pow_count_data = db.get_db_data(pow_count_call)
+    pow_count = int(pow_count_data[0][0])
 
+    # Get POW type ratio
+    on_demand_count = 0
+    precache_count = 0
+    pow_ratio_data = db.get_db_data(pow_ratio_call)
 
-def on_connect(client, userdata, flags, rc):
-    """
-    On connection to the MQTT server, automatically subscribe to merchant_order_requests topic
-    """
-    print("{}: Connected to DPOW Server with result code {}".format(datetime.now(), str(rc)))
-    client.subscribe('work/#')
-    client.subscribe('result/#')
-    client.subscribe('statistics')
+    for pow in pow_ratio_data:
+        if pow[0] == 'ondemand':
+            on_demand_count = pow[1]
+        elif pow[0] == 'precache':
+            precache_count = pow[1]
+    if pow_count > 0:
+        on_demand_ratio = round((on_demand_count / pow_count) * 100, 1)
+        precache_ratio = round((precache_count / pow_count) * 100, 1)
+    else:
+        on_demand_ratio = 0
+        precache_ratio = 0
 
+    # Get service count
+    service_count_data = db.get_db_data(service_count_call)
+    service_count = int(service_count_data[0][0])
 
-def on_message(client, userdata, msg):
-    try:
-        r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
-        topic = msg.topic
-        topic = topic.split('/')
-        if topic[0] == 'work':
-            work_type = topic[1]
-            message = msg.payload.decode().split(',')
-            work_hash = message[0]
-            work_difficulty = message[1]
-            mapping = {'work_type': work_type, 'work_difficulty': work_difficulty, 'timestamp': str(datetime.now())}
-            r.hmset(work_hash, mapping)
+    # Get unlisted / listed services
+    unlisted_service_data = db.get_db_data(unlisted_service_call)
+    unlisted_services = int(unlisted_service_data[0][0])
+    listed_services = service_count - unlisted_services
 
-            logger.info("{}: work topic received: Work type = {}, hash: {}, difficulty: {}".format(datetime.now(),
-                                                                                                   work_type,
-                                                                                                   work_hash,
-                                                                                                   work_difficulty))
-        elif topic[0] == 'result':
-            message = msg.payload.decode().split(',')
-            work_hash = message[0]
-            work_value = message[1]
-            work_client = message[2]
+    # Get client count
+    client_count_data = db.get_db_data(client_count_call)
+    client_count = int(client_count_data[0][0])
 
-            hmreturn = r.hmget(work_hash, ['work_type', 'timestamp', 'work_difficulty'])
+    # Get 24hr differences
+    services_24hr_data = db.get_db_data(services_24hr_call)
+    services_24hr = services_24hr_data[0][0]
+    if services_24hr is None:
+        services_24hr = 0
 
-            work_type = hmreturn[0].decode()
-            request_time = datetime.strptime(hmreturn[1].decode(), '%Y-%m-%d %H:%M:%S.%f')
-            work_difficulty = hmreturn[2].decode()
+    clients_24hr_data = db.get_db_data(clients_24hr_call)
+    clients_24hr = clients_24hr_data[0][0]
+    if clients_24hr is None:
+        clients_24hr = 0
 
-            if work_difficulty != 'ffffffc000000000':
-                # Add work multiplier logic for V19
-                # work_multiplier = get_work_mult(work_value, work_hash)
-                work_multiplier = "1.2"
-            else:
-                # Add work multiplier logic for V19
-                # work_multiplier = get_work_mult(work_value, work_hash)
-                work_multiplier = "1"
+    work_24hr_data = db.get_db_data(work_24hr_call)
+    work_24hr = work_24hr_data[0][0]
+    diff_24hr_data = db.get_db_data(diff_24hr_call)
+    diff_24hr = diff_24hr_data[0][0]
 
-            time_diff_micro = (datetime.now() - request_time).microseconds
-            time_difference = round(time_diff_micro * (10 ** -6), 4)
+    # Get info for Services section
+    services_table = db.get_db_data(services_call)
 
-            client_sql = "INSERT IGNORE INTO dpow_mqtt.clients SET client_id = %s"
+    unlisted_services_call = "SELECT private_count FROM services where service_name = 'private'"
+    unlisted_services_data = db.get_db_data(unlisted_services_call)
+    unlisted_count = unlisted_services_data[0][0]
 
-            request_sql = ("INSERT IGNORE INTO requests "
-                           "(hash, client, work_type, work_value, work_difficulty, multiplier, response_length) "
-                           "VALUES (%s, %s, %s, %s, %s, %s, %s)")
+    unlisted_pow_call = "SELECT service_ondemand + service_precache FROM services WHERE service_name = 'private'"
+    unlisted_pow_data = db.get_db_data(unlisted_pow_call)
+    unlisted_pow = unlisted_pow_data[0][0]
 
-            db.set_db_data(client_sql, [work_client, ])
-            db.set_db_data(request_sql, [work_hash, work_client, work_type, work_value,
-                                         work_difficulty, work_multiplier, time_difference])
+    # Get info for Clients section
+    clients_table = db.get_db_data(clients_call)
 
-        elif topic[0] == 'statistics':
-            stats = json.loads(msg.payload)
-            print("Stats call received: ", stats)
-            try:
-                db.set_services(stats['services']['public'])
+    # Get info for POW charts
+    day_total = db.get_db_data(pow_day_total_call)
+    hour_total = db.get_db_data(pow_hour_total_call)
+    minute_total = db.get_db_data(pow_minute_total_call)
 
-                private_call = ("INSERT INTO services"
-                                " (service_name, service_ondemand, service_precache, private_count)"
-                                " VALUES ('private', %s, %s, %s)"
-                                " ON DUPLICATE KEY UPDATE service_ondemand = VALUES(service_ondemand),"
-                                " service_precache = VALUES(service_precache),"
-                                " private_count = VALUES(private_count)")
-                private_stats = stats['services']['private']
-                db.set_db_data(private_call, [private_stats['ondemand'],
-                                              private_stats['precache'],
-                                              private_stats['count']])
+    day_precache = db.get_db_data(day_p_call)
+    day_ondemand = db.get_db_data(day_o_call)
+    hour_precache = db.get_db_data(hour_p_call)
+    hour_ondemand = db.get_db_data(hour_o_call)
+    minute_precache = db.get_db_data(minute_p_call)
+    minute_ondemand = db.get_db_data(minute_o_call)
 
-            except Exception as e:
-                print("Error printing public services: {}".format(e))
-                print(stats)
-        else:
-            try:
-                print("UNEXPECTED MESSAGE")
-                print("TOPIC: {}".format(topic[0].upper()))
-                print("message: {}".format(msg.payload))
-            except Exception as e:
-                print("exception: {}".format(e))
+    avg_p_time = db.get_db_data(avg_p_time_call)
+    avg_o_time = db.get_db_data(avg_o_time_call)
+    avg_combined_time = db.get_db_data(avg_combined_call)
+    avg_overall_data = db.get_db_data(avg_overall_call)
+    avg_requests_data = db.get_db_data(avg_requests_call)
+    total_requests = 0
+    count_requests = 0
 
-    except Exception as e:
-        print("Error: {}".format(e))
+    for row in avg_requests_data:
+        total_requests += row[1]
+        count_requests += 1
+
+    requests_avg = int(total_requests / count_requests)
+
+    if avg_overall_data[0][0] is not None:
+        avg_overall = round(float(avg_overall_data[0][0]), 1)
+    else:
+        avg_overall = 0
+
+    avg_difficulty_data = db.get_db_data(avg_difficulty_call)
+    if avg_difficulty_data[0][0] is not None:
+        avg_difficulty = round(avg_difficulty_data[0][0], 1)
+    else:
+        avg_difficulty = 1.0
+
+    return render_template('index.html', pow_count=pow_count, on_demand_ratio=on_demand_ratio,
+                           precache_ratio=precache_ratio, service_count=service_count, client_count=client_count,
+                           listed_services=listed_services, unlisted_services=unlisted_services,
+                           services_24hr=services_24hr, clients_24hr=clients_24hr, work_24hr=work_24hr,
+                           services_table=services_table, unlisted_count=unlisted_count, unlisted_pow=unlisted_pow,
+                           clients_table=clients_table, day_total=day_total, hour_total=hour_total,
+                           minute_total=minute_total, day_ondemand=day_ondemand, day_precache=day_precache,
+                           hour_ondemand=hour_ondemand, hour_precache=hour_precache, minute_ondemand=minute_ondemand,
+                           minute_precache=minute_precache, avg_p_time=avg_p_time, avg_overall=avg_overall,
+                           avg_combined_time=avg_combined_time, avg_difficulty=avg_difficulty,
+                           requests_avg=requests_avg, avg_o_time=avg_o_time, diff_24hr=diff_24hr)
 
 
 if __name__ == "__main__":
-    db.db_init()
-    # app.run(host='0.0.0.0')
-
-    c = mqtt.Client()
-
-    c.on_connect = on_connect
-    c.on_message = on_message
-
-    c.username_pw_set(POW_USER, password=POW_PW)
-    c.connect(MQTT_IP, MQTT_PORT)
-
-    c.loop_forever()
+    app.run(host='0.0.0.0')
