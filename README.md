@@ -20,14 +20,14 @@ Steps:
 4. `source venv/bin/activate`
 5. run: `pip install -r requirements.txt`
 6. Copy the example services to the systemd directory:   
-`cp exampleflaskservice.service /etc/systemd/system/dpowdash.service`  
-`cp examplservice.service /etc/systemd/system/dpowmqtt.service`
+`sudo cp exampleflaskservice.service /etc/systemd/system/dpowdash.service`  
+`sudo cp exampleservice.service /etc/systemd/system/dpowmqtt.service`
 7. Update services with proper information:  
 `sudo vim /etc/systemd/system/dpowdash.service`  
 `sudo vim /etc/systemd/system/dpowmqtt.service`
 8. Copy the exampleconfig.ini: `cp exampleconfig.ini config.ini`
 9. Update the config.ini with appropriate values: `sudo vim config.ini`
-10. `sudo systemctl start dpowdash` - start the dashboard & mqtt client
+10. `sudo systemctl start dpowdash` `sudo systemctl start dpowmqtt` - start the dashboard & mqtt client
 11. `sudo systemctl enable dpowdash` `sudo systemctl enable dpowmqtt` - start the services on boot
 
 After the service is running, you must configure Nginx to proxy requests

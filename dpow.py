@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from datetime import datetime
 from flask import Flask, render_template, request
 from logging.handlers import TimedRotatingFileHandler
