@@ -16,7 +16,7 @@ It's recommended to use a virtual environment to handle the python requirements.
 Steps:
 1. Activate the redis server: `sudo systemctl enable redis-server.service`
 2. Navigate to the dpow-mqtt directory
-3. Activate your virtual environment: `python -m venv`
+3. Activate your virtual environment: `virtualenv venv`
 4. `source venv/bin/activate`
 5. run: `pip install -r requirements.txt`
 6. Copy the example services to the systemd directory:   
