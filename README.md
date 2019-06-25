@@ -54,10 +54,14 @@ server {
 
 The final step is to set up a cron job to run the log updates every 24 hours.  This gives 
 the client_log and service_log their information to generate the change over 24 hours.
-1. Ensure the log_update.sh file is executable: `chmod +x log_update.sh`
-2. Run `crontab -e` and select whatever editor you're comfortable with.
+1. Ensure the log_update.sh file is executable: `sudo chmod +x log_update.sh`
+2. Run `sudo crontab -e` and select whatever editor you're comfortable with.
 3. Insert the following line at the end of the file: `0 2 * * * {YOUR_USERNAME} /path/to/dpow-mqtt/log_update.sh`
 
 You should now be able to navigate to `http://{YOUR_DOMAIN}` to access the dashboard.
 HTTPS is recommended, but not required.  For more information, google Certbot to easily generate a 
 certificate and enable HTTPS.
+
+## Troubleshooting
+If you notice that you're not able to reach via your registered domain, check permissions for the folders.  
+Standards suggest to set the owner and group to root:www-data so nginx has access.
