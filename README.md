@@ -27,8 +27,8 @@ Steps:
 `sudo vim /etc/systemd/system/dpowmqtt.service`
 8. Copy the exampleconfig.ini: `cp exampleconfig.ini config.ini`
 9. Update the config.ini with appropriate values: `sudo vim config.ini`
-10. Ensure dpow.py is executable: `sudo chmod -x dpow.py`
-11. Modify the shebang at the top of dpow.py to the correct path.  Example: `/home/{YOUR_USER}/dpow-mqtt/venv/bin/python3`
+10. Ensure dpow.py is executable: `sudo chmod -x mqtt.py`
+11. Modify the shebang at the top of mqtt.py to the correct path.  Example: `/home/{YOUR_USER}/dpow-mqtt/venv/bin/python3`
 12. `sudo systemctl start dpowdash` `sudo systemctl start dpowmqtt` - start the dashboard & mqtt client
 13. `sudo systemctl enable dpowdash` `sudo systemctl enable dpowmqtt` - start the services on boot
 

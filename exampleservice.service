@@ -7,7 +7,7 @@ User={YOUR_USERNAME}
 Group={YOUR_GROUP}
 WorkingDirectory=/home/{YOUR_USERNAME}/dpow-mqtt
 Environment="PATH=/home/{YOUR_USERNAME}/dpow-mqtt/venv/bin"
-ExecStart=/home/{YOUR_USERNAME}/dpow-mqtt/dpow.py
+ExecStart=/home/{YOUR_USERNAME}/dpow-mqtt/mqtt.py
 
 [Install]
 WantedBy=multi-user.target

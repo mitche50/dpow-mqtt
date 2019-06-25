@@ -1,5 +1,3 @@
-#!/path/to/dpow-mqtt/venv/bin/python3
-
 from datetime import datetime
 from flask import Flask, render_template
 from logging.handlers import TimedRotatingFileHandler
