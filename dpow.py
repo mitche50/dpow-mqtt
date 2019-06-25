@@ -41,14 +41,14 @@ services_call = ("SELECT service_name, service_website, (service_ondemand + serv
                  "FROM services "
                  "WHERE service_name != 'private' "
                  "ORDER BY pow DESC")
-clients_call = ("SELECT t1.client, t1.precache, t2.ondemand FROM "
-                "   (SELECT client, count(client) as precache FROM "
-                "   requests WHERE work_type = 'precache' GROUP BY client) as t1"
-                " join "
+clients_call = ("SELECT t1.client, ( t1.total - IFNULL(t2.ondemand, 0) ), IFNULL(t2.ondemand, 0) FROM "
+                "   (SELECT client, count(client) as total FROM "
+                "   requests GROUP BY client) as t1"
+                " left join "
                 "   (SELECT client, count(client) as ondemand FROM "
                 "   requests WHERE work_type = 'ondemand' GROUP BY client) as t2"
                 " on t1.client = t2.client"
-                " ORDER BY precache + ondemand DESC;")
+                " ORDER BY total DESC;")
 avg_difficulty_call = "SELECT round(avg(multiplier),2) FROM requests WHERE response_ts >= NOW() - INTERVAL 30 MINUTE"
 avg_requests_call = ("SELECT date_format(response_ts, '%Y-%m-%d'), count(hash) FROM requests "
                      "WHERE response_ts >= NOW() - INTERVAL 1 MONTH "
