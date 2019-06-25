@@ -1,7 +1,7 @@
-#!/usr/bin/python
+#!/path/to/dpow-mqtt/venv/bin/python3
 
 from datetime import datetime
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 from logging.handlers import TimedRotatingFileHandler
 
 import logging
@@ -12,7 +12,7 @@ import modules.db as db
 logger = logging.getLogger("dpow_log")
 logger.setLevel(logging.INFO)
 
-handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}.log'.format(os.getcwd(), datetime.now()),
+handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-flask.log'.format(os.getcwd(), datetime.now()),
                                    when="d",
                                    interval=1,
                                    backupCount=5)

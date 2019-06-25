@@ -18,7 +18,7 @@ config.read('{}/config.ini'.format(os.getcwd()))
 logger = logging.getLogger("dpow_log")
 logger.setLevel(logging.INFO)
 
-handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}.log'.format(os.getcwd(), datetime.now()),
+handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-mqtt.log'.format(os.getcwd(), datetime.now()),
                                    when="d",
                                    interval=1,
                                    backupCount=5)

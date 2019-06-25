@@ -27,8 +27,10 @@ Steps:
 `sudo vim /etc/systemd/system/dpowmqtt.service`
 8. Copy the exampleconfig.ini: `cp exampleconfig.ini config.ini`
 9. Update the config.ini with appropriate values: `sudo vim config.ini`
-10. `sudo systemctl start dpowdash` `sudo systemctl start dpowmqtt` - start the dashboard & mqtt client
-11. `sudo systemctl enable dpowdash` `sudo systemctl enable dpowmqtt` - start the services on boot
+10. Ensure dpow.py is executable: `sudo chmod -x dpow.py`
+11. Modify the shebang at the top of dpow.py to the correct path.  Example: `/home/{YOUR_USER}/dpow-mqtt/venv/bin/python3`
+12. `sudo systemctl start dpowdash` `sudo systemctl start dpowmqtt` - start the dashboard & mqtt client
+13. `sudo systemctl enable dpowdash` `sudo systemctl enable dpowmqtt` - start the services on boot
 
 After the service is running, you must configure Nginx to proxy requests
 1. `sudo vim /etc/nginx/sites-available/dpowdash`
@@ -44,10 +46,11 @@ server {
     }
 }
 ```
-3\. Create a link to the enabled sites directory: `sudo ln -s /etc/nginx/sites-available/dpowdash /etc/nginx/sites-enabled`<br/>
-4\. Test for syntax errors: `sudo nginx -t`<br/>
-5\. If no errors: `sudo systemctl restart nginx`<br/>
-6\. Ensure that Nginx is allowed: `sudo ufw allow 'Nginx Full'`
+
+&nbsp;&nbsp;3\. Create a link to the enabled sites directory: `sudo ln -s /etc/nginx/sites-available/dpowdash /etc/nginx/sites-enabled`<br/>
+&nbsp;&nbsp;4\. Test for syntax errors: `sudo nginx -t`<br/>
+&nbsp;&nbsp;5\. If no errors: `sudo systemctl restart nginx`<br/>
+&nbsp;&nbsp;6\. Ensure that Nginx is allowed: `sudo ufw allow 'Nginx Full'`
 
 The final step is to set up a cron job to run the log updates every 24 hours.  This gives 
 the client_log and service_log their information to generate the change over 24 hours.
