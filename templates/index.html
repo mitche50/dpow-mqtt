@@ -100,10 +100,10 @@
                 </h1><p style="display:inline;">x</p>
             </div>
             <div style="display:inline-block; vertical-align:top">
-                {% if diff_24hr == None or diff_24hr < 0 %}
-                  <p style="color:#E24A4A; font-size:10px; display:inline;">{% if diff_24hr == None %} 0 {% else %}{{diff_24hr}}{% endif %}</p>
-                {% elif diff_24hr == 0 %}
-                  <p style="color:grey; font-size:10px; display:inline;">{{diff_24hr}}</p>
+                {% if diff_24hr == None or diff_24hr == 0 %}
+                  <p style="color:grey; font-size:10px; display:inline;">{% if diff_24hr == None %} 0 {% else %}{{diff_24hr}}{% endif %}</p>
+                {% elif diff_24hr < 0 %}
+                  <p style="color:#E24A4A; font-size:10px; display:inline;">{{diff_24hr}}</p>
                 {% else %}
                   <p style="color:#32CD32; font-size:10px; display:inline;">+{{diff_24hr}}</p>
                 {% endif %}
