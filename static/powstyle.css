@@ -98,6 +98,11 @@ p.dpow-good {
   display:inline;
 }
 
+.donate-qr{
+  max-width: 200px;
+  border-radius: 10px;
+}
+
 p.dpow-bad {
   color:#E24A4A;
   font-size:10px;
