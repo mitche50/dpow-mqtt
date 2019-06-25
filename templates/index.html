@@ -274,74 +274,79 @@
     var dayToolTip = 'MMM Do'
     var hourToolTip = 'MMM Do h a'
     var minuteToolTip = 'MMM Do h:mm a'
-    var hour_data = [{% for row in hour_total %}
-        {x: "{{row[0]}}", y: {{row[1]}}},
-        {% endfor %}];
-    var minute_data = [{% for row in minute_total %}
-        {x: "{{row[0]}}", y: {{row[1]}}},
-        {% endfor %}];
-    var day_data = [{% for row in day_total %}
-        {x: "{{row[0]}}", y: {{row[1]}}},
-        {% endfor %}];
-    var hour_precache_table = [{% for row in hour_precache %}
-        {% if row[2] %}
-            {x: "{{row[0]}}", y: {{row[2]}}},
+
+    var hour_data = [];
+    var hour_precache_table = [];
+    var hour_ondemand_table = [];
+
+    var minute_data = [];
+    var minute_precache_table = [];
+    var minute_ondemand_table = [];
+
+    var day_data = [];
+    var day_precache_table = [];
+    var day_ondemand_table = [];
+
+    var avg_precache_time = [];
+    var avg_ondemand_time = [];
+    var combined_time = [];
+
+    {% for row in hour_total %}
+        hour_data = hour_data.concat([{x: "{{row[0]}}", y: {{row[1]}}}]);
+        {% if row[2] != None %}
+            hour_precache_table = hour_precache_table.concat([{x: "{{row[0]}}", y: {{row[2]}}}]);
         {% else %}
-            {x: "{{row[0]}}", y: 0},
+            hour_precache_table = hour_precache_table.concat([{x: "{{row[0]}}", y: 0}]);
         {% endif %}
-        {% endfor %}];
-    var hour_ondemand_table = [{% for row in hour_ondemand %}
-        {% if row[2] %}
-            {x: "{{row[0]}}", y: {{row[2]}}},
+        {% if row[3] != None %}
+            hour_ondemand_table = hour_ondemand_table.concat([{x: "{{row[0]}}", y: {{row[3]}}}]);
         {% else %}
-            {x: "{{row[0]}}", y: 0},
+            hour_ondemand_table = hour_ondemand_table.concat([{x: "{{row[0]}}", y: 0}]);
         {% endif %}
-        {% endfor %}];
-    var minute_precache_table = [{% for row in minute_precache %}
-        {% if row[2] %}
-            {x: "{{row[0]}}", y: {{row[2]}}},
+    {% endfor %}
+
+    {% for row in minute_total %}
+        minute_data = minute_data.concat([{x: "{{row[0]}}", y: {{row[1]}}}]);
+        {% if row[2] != None %}
+            minute_precache_table = minute_precache_table.concat([{x: "{{row[0]}}", y: {{row[2]}}}]);
         {% else %}
-            {x: "{{row[0]}}", y: 0},
+            minute_precache_table = minute_precache_table.concat([{x: "{{row[0]}}", y: 0}]);
         {% endif %}
-        {% endfor %}];
-    var minute_ondemand_table = [{% for row in minute_ondemand %}
-        {% if row[2] %}
-            {x: "{{row[0]}}", y: {{row[2]}}},
+        {% if row[3] != None %}
+            minute_ondemand_table = minute_ondemand_table.concat([{x: "{{row[0]}}", y: {{row[3]}}}]);
         {% else %}
-            {x: "{{row[0]}}", y: 0},
+            minute_ondemand_table = minute_ondemand_table.concat([{x: "{{row[0]}}", y: 0}]);
         {% endif %}
-        {% endfor %}];
-    var day_precache_table = [{% for row in day_precache %}
-        {% if row[2] %}
-            {x: "{{row[0]}}", y: {{row[2]}}},
+    {% endfor %}
+
+    {% for row in day_total %}
+        day_data = day_data.concat([{x: "{{row[0]}}", y: {{row[1]}}}]);
+        {% if row[2] != None %}
+            day_precache_table = day_precache_table.concat([{x: "{{row[0]}}", y: {{row[2]}}}]);
         {% else %}
-            {x: "{{row[0]}}", y: 0},
+            day_precache_table = day_precache_table.concat([{x: "{{row[0]}}", y: 0}]);
         {% endif %}
-        {% endfor %}];
-    var day_ondemand_table = [{% for row in day_ondemand %}
-        {% if row[2] %}
-            {x: "{{row[0]}}", y: {{row[2]}}},
+        {% if row[3] != None %}
+            day_ondemand_table = day_ondemand_table.concat([{x: "{{row[0]}}", y: {{row[3]}}}]);
         {% else %}
-            {x: "{{row[0]}}", y: 0},
+            day_ondemand_table = day_ondemand_table.concat([{x: "{{row[0]}}", y: 0}]);
         {% endif %}
-        {% endfor %}];
-    var avg_precache_time = [{% for row in avg_p_time %}
-        {% if row[1] %}
-            {x: "{{row[0]}}", y: {{row[2]}}},
+    {% endfor %}
+
+    {% for row in avg_combined_time %}
+        combined_time = combined_time.concat([{x: "{{row[0]}}", y: {{row[1]}}}]);
+        {% if row[2] != None %}
+            avg_precache_time = avg_precache_time.concat([{x: "{{row[0]}}", y: {{row[2]}}}]);
         {% else %}
-            {x: "{{row[0]}}", y: 0},
+            avg_precache_time = avg_precache_time.concat([{x: "{{row[0]}}", y: 0}]);
         {% endif %}
-        {% endfor %}];
-    var avg_ondemand_time = [{% for row in avg_o_time %}
-        {% if row[1] %}
-            {x: "{{row[0]}}", y: {{row[2]}}},
+        {% if row[3] != None %}
+            avg_ondemand_time = avg_ondemand_time.concat([{x: "{{row[0]}}", y: {{row[3]}}}]);
         {% else %}
-            {x: "{{row[0]}}", y: 0},
+            avg_ondemand_time = avg_ondemand_time.concat([{x: "{{row[0]}}", y: 0}]);
         {% endif %}
-        {% endfor %}];
-    var combined_time = [{% for row in avg_combined_time %}
-        {x: "{{row[0]}}", y: {{row[1]}}},
-    {% endfor %}];
+    {% endfor %}
+
     var avg_data = hour_data;
     var avg_precache_table = hour_precache_table;
     var avg_ondemand_table = hour_ondemand_table;
