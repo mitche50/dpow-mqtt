@@ -56,7 +56,7 @@ def on_connect(client, userdata, flags, rc):
     """
     On connection to the MQTT server, automatically subscribe to merchant_order_requests topic
     """
-    print("{}: Connected to DPOW Server with result code {}".format(datetime.now(), str(rc)))
+    logger.info("{}: Connected to DPOW Server with result code {}".format(datetime.now(), str(rc)))
     client.subscribe('work/#')
     client.subscribe('result/#')
     client.subscribe('statistics')
@@ -115,7 +115,7 @@ def on_message(client, userdata, msg):
 
         elif topic[0] == 'statistics':
             stats = json.loads(msg.payload)
-            print("Stats call received: ", stats)
+            logger.info("Stats call received: ", stats)
             try:
                 db.set_services(stats['services']['public'])
 
@@ -131,18 +131,18 @@ def on_message(client, userdata, msg):
                                               private_stats['count']])
 
             except Exception as e:
-                print("Error printing public services: {}".format(e))
-                print(stats)
+                logger.info("Error logger.infoing public services: {}".format(e))
+                logger.info(stats)
         else:
             try:
-                print("UNEXPECTED MESSAGE")
-                print("TOPIC: {}".format(topic[0].upper()))
-                print("message: {}".format(msg.payload))
+                logger.info("UNEXPECTED MESSAGE")
+                logger.info("TOPIC: {}".format(topic[0].upper()))
+                logger.info("message: {}".format(msg.payload))
             except Exception as e:
-                print("exception: {}".format(e))
+                logger.info("exception: {}".format(e))
 
     except Exception as e:
-        print("Error: {}".format(e))
+        logger.info("Error: {}".format(e))
 
 if __name__ == "__main__":
     db.db_init()
