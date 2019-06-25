@@ -2,8 +2,10 @@ from datetime import datetime
 from flask import Flask, render_template
 from logging.handlers import TimedRotatingFileHandler
 
+import json
 import logging
 import os
+import requests
 
 import modules.db as db
 
@@ -92,6 +94,15 @@ avg_combined_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, avg(
                      "GROUP BY ts, work_type;")
 avg_overall_call = ("SELECT avg(response_length) FROM requests "
                     "WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR")
+
+
+@app.route("/upcheck")
+def upcheck():
+    post_url = "https://dpow.nanocenter.org/upcheck"
+    response = requests.get(post_url)
+    if response.text != 'up':
+        return 'Offline'
+    return 'Online'
 
 
 @app.route("/")
