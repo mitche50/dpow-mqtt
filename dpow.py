@@ -124,6 +124,7 @@ avg_combined_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
                      "on t1.ts = t3.ts ORDER BY ts ASC;")
 avg_overall_call = ("SELECT avg(response_length) FROM requests "
                     "WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR")
+live_chart_call = "SELECT response_length FROM requests ORDER BY response_ts DESC LIMIT 25;"
 
 
 @app.route("/upcheck")
@@ -213,6 +214,13 @@ def index():
     total_requests = 0
     count_requests = 0
 
+    live_chart_data = db.get_db_data(live_chart_call)
+    live_chart_prefill = []
+    for row in live_chart_data:
+        live_chart_prefill.append(float(row[0]))
+
+    print(live_chart_prefill)
+
     for row in avg_requests_data:
         total_requests += row[1]
         count_requests += 1
@@ -237,7 +245,8 @@ def index():
                            services_table=services_table, unlisted_count=unlisted_count, unlisted_pow=unlisted_pow,
                            clients_table=clients_table, day_total=day_total, hour_total=hour_total,
                            minute_total=minute_total, avg_overall=avg_overall, avg_combined_time=avg_combined_time,
-                           avg_difficulty=avg_difficulty, requests_avg=requests_avg, diff_24hr=diff_24hr)
+                           avg_difficulty=avg_difficulty, requests_avg=requests_avg, diff_24hr=diff_24hr,
+                           live_chart_prefill=live_chart_prefill)
 
 
 if __name__ == "__main__":

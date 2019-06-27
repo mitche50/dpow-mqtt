@@ -180,15 +180,18 @@ var wsChart = new Chart(document.getElementById('wsChart'), {
   data: {
     labels: [],
     datasets: [{
-      label: 'Request',
-      data: [],
-      backgroundColor: '#f44336',
-      borderColor: '#f44336',
-      borderWidth: 1,
-      fill: false
+      label: 'Response Time',
+      data: {{live_chart_prefill}},
+      backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 1
     }]
   },
   options: {
+    tooltips: {
+        intersect: false,
+        mode: 'index'
+    },
     responsive: true,
     scales: {
       yAxes: [{
@@ -207,9 +210,9 @@ var wsChart = new Chart(document.getElementById('wsChart'), {
 
 for (let i = 25; i > 0; i--) {
   wsChart.data.labels.push(i)
-  wsChart.data.datasets.forEach((dataset) => {
+  /*wsChart.data.datasets.forEach((dataset) => {
       dataset.data.push(0);
-  });
+  });*/
   wsChart.update();
 }
 
