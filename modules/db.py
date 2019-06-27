@@ -231,6 +231,8 @@ def set_services(services):
     """
     Drop service table and insert new one.
     """
+    delete_services_call = "DELETE FROM services"
+    set_db_data(delete_services_call, None)
 
     create_row_call = ("INSERT INTO services (service_name, service_website, service_ondemand, service_precache) "
                        "VALUES ")
