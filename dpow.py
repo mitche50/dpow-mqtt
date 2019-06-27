@@ -24,9 +24,10 @@ pow_count_call = "SELECT count(hash) FROM requests WHERE response_ts >= NOW() - 
 pow_ratio_call = ("SELECT work_type, count(work_type) FROM requests"
                   " WHERE response_ts >= NOW() - INTERVAL 24 HOUR"
                   " GROUP BY work_type order by work_type ASC;")
-service_count_call = "SELECT count(service_name) FROM services WHERE service_name != 'private';"
+service_count_call = ("SELECT((SELECT count(service_name) FROM services WHERE service_name != 'private') + "
+                      "(SELECT private_count FROM services WHERE service_name = 'private'));")
 unlisted_service_call = "SELECT private_count FROM services WHERE service_name = 'private';"
-client_count_call = "SELECT count(client_id) FROM clients WHERE last_action >= NOW() - INTERVAL 60 MINUTE;"
+client_count_call = "SELECT count(client_id) FROM clients WHERE last_action >= NOW() - INTERVAL 24 HOUR;"
 services_24hr_call = ("SELECT ((SELECT service_count FROM service_log WHERE date_desc = 'today') "
                       "- (SELECT service_count FROM service_log WHERE date_desc = 'yesterday'))")
 clients_24hr_call = ("SELECT ((SELECT client_count FROM client_log WHERE date_desc = 'today') "
