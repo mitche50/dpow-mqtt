@@ -111,7 +111,7 @@ def on_message(client, userdata, msg):
 
         elif topic[0] == 'statistics':
             stats = json.loads(msg.payload.decode())
-            logger.info("Stats call received: ", stats)
+            logger.info("Stats call received: {}".format(stats))
             try:
                 db.set_services(stats['services']['public'])
 

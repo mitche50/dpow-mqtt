@@ -118,3 +118,7 @@ p.dpow-none {
 span.dpow-good {
   color:#32CD32;
 }
+
+.client_td {
+  text-align: center;
+}
