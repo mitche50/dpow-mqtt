@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ce4c921f-899a-4adc-a445-3b52b4945554" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/static/mqtt.min.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt.py" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dpow.py" beforeDir="false" afterPath="$PROJECT_DIR$/dpow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/footer.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/footer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,8 +17,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dpow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-600">
-              <caret line="110" column="81" selection-start-line="110" selection-start-column="81" selection-end-line="110" selection-end-column="81" />
+            <state relative-caret-position="238">
+              <caret line="131" column="37" lean-forward="true" selection-start-line="131" selection-start-column="37" selection-end-line="131" selection-end-column="37" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -61,7 +59,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1669">
+            <state relative-caret-position="2820">
               <caret line="295" column="34" selection-start-line="295" selection-start-column="32" selection-end-line="295" selection-end-column="34" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#!!top" expanded="true" />
@@ -129,8 +127,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/footer.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3825">
-              <caret line="255" column="41" selection-start-line="255" selection-start-column="41" selection-end-line="255" selection-end-column="41" />
+            <state relative-caret-position="255">
+              <caret line="17" column="91" selection-start-line="17" selection-start-column="91" selection-end-line="17" selection-end-column="91" />
             </state>
           </provider>
         </entry>
@@ -204,12 +202,12 @@
         <option value="$PROJECT_DIR$/exampleservice.service" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="$PROJECT_DIR$/dpow.py" />
         <option value="$PROJECT_DIR$/static/powstyle.css" />
         <option value="$PROJECT_DIR$/templates/header.html" />
         <option value="$PROJECT_DIR$/templates/index.html" />
-        <option value="$PROJECT_DIR$/templates/footer.html" />
         <option value="$PROJECT_DIR$/mqtt.py" />
+        <option value="$PROJECT_DIR$/dpow.py" />
+        <option value="$PROJECT_DIR$/templates/footer.html" />
       </list>
     </option>
   </component>
@@ -431,7 +429,21 @@
       <option name="project" value="LOCAL" />
       <updated>1561488045441</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="add live chart, format donations block, revise logic for avg difficulty">
+      <created>1561598051413</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1561598051413</updated>
+    </task>
+    <task id="LOCAL-00017" summary="fix incorrect SQL calls">
+      <created>1561599363417</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1561599363417</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -472,7 +484,9 @@
     <MESSAGE value="fix sorting for charts" />
     <MESSAGE value="fix avg chart" />
     <MESSAGE value="add donation QR and format jumbotron image (max width, whoops!)" />
-    <option name="LAST_COMMIT_MESSAGE" value="add donation QR and format jumbotron image (max width, whoops!)" />
+    <MESSAGE value="add live chart, format donations block, revise logic for avg difficulty" />
+    <MESSAGE value="fix incorrect SQL calls" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix incorrect SQL calls" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/venv/bin/activate">
@@ -627,16 +641,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dpow.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-600">
-          <caret line="110" column="81" selection-start-line="110" selection-start-column="81" selection-end-line="110" selection-end-column="81" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mqtt.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="253">
@@ -644,9 +648,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/dpow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="131" column="37" lean-forward="true" selection-start-line="131" selection-start-column="37" selection-end-line="131" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1669">
+        <state relative-caret-position="2820">
           <caret line="295" column="34" selection-start-line="295" selection-start-column="32" selection-end-line="295" selection-end-column="34" />
           <folding>
             <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#!!top" expanded="true" />
@@ -697,8 +711,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/footer.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3825">
-          <caret line="255" column="41" selection-start-line="255" selection-start-column="41" selection-end-line="255" selection-end-column="41" />
+        <state relative-caret-position="255">
+          <caret line="17" column="91" selection-start-line="17" selection-start-column="91" selection-end-line="17" selection-end-column="91" />
         </state>
       </provider>
     </entry>

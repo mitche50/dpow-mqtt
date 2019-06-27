@@ -55,22 +55,22 @@ avg_requests_call = ("SELECT date_format(response_ts, '%Y-%m-%d'), count(hash) F
                      "WHERE response_ts >= NOW() - INTERVAL 1 MONTH "
                      "GROUP BY date_format(response_ts, '%Y-%m-%d')")
 pow_day_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
-                       "FROM "
-                       "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as overall "
-                       " FROM requests "
-                       " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t1 "
-                       "left join "
-                       "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as precache "
-                       " FROM requests "
-                       " WHERE work_type = 'precache' "
-                       " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t2 "
-                       " on t1.ts = t2.ts "
-                       " left join "
-                       " (SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as ondemand "
-                       " FROM requests  "
-                       " WHERE work_type = 'ondemand' "
-                       " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t3 "
-                       " on t1.ts = t3.ts ORDER BY ts ASC;")
+                      "FROM "
+                      "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as overall "
+                      " FROM requests "
+                      " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t1 "
+                      "left join "
+                      "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as precache "
+                      " FROM requests "
+                      " WHERE work_type = 'precache' "
+                      " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t2 "
+                      " on t1.ts = t2.ts "
+                      " left join "
+                      " (SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as ondemand "
+                      " FROM requests  "
+                      " WHERE work_type = 'ondemand' "
+                      " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t3 "
+                      " on t1.ts = t3.ts ORDER BY ts ASC;")
 pow_hour_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
                        "FROM "
                        "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as overall "
@@ -236,7 +236,7 @@ def index():
                            services_24hr=services_24hr, clients_24hr=clients_24hr, work_24hr=work_24hr,
                            services_table=services_table, unlisted_count=unlisted_count, unlisted_pow=unlisted_pow,
                            clients_table=clients_table, day_total=day_total, hour_total=hour_total,
-                           minute_total=minute_total,avg_overall=avg_overall, avg_combined_time=avg_combined_time,
+                           minute_total=minute_total, avg_overall=avg_overall, avg_combined_time=avg_combined_time,
                            avg_difficulty=avg_difficulty, requests_avg=requests_avg, diff_24hr=diff_24hr)
 
 

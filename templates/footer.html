@@ -11,11 +11,11 @@
         $.ajax({
                 url: '/upcheck',
                 success: function (data) {
-                    if (data == 'Online') {
-                        $('#status-indicator').html('Status: <span class="dpow-good">' + data + '</span>');
+                    if (data == 'up') {
+                        $('#status-indicator').html('Status: <span class="dpow-good">Online</span>');
                     }
                     else {
-                        $('#status-indicator').html('Status: <span class="dpow-bad">' + data + '</span>');
+                        $('#status-indicator').html('Status: <span class="dpow-bad">Offline</span>');
                     }
                 },
                 complete: function (data) {
