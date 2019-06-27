@@ -36,20 +36,18 @@ REDIS_PORT = int(config.get('redis', 'port'))
 REDIS_DB = int(config.get('redis', 'db'))
 
 
-def get_work_mult(work_value, work_hash):
+def get_work_mult():
     """
     When a result message is received, retrieve the work multiplier
     """
     data = {
-        "action": "work_validate",
-        "work": work_value,
-        "hash": work_hash
+        "action": "active_difficulty"
     }
     json_request = json.dumps(data)
     r = requests.post('{}'.format(NODE_IP), data=json_request)
     rx = r.json()
 
-    return rx
+    return rx['multiplier']
 
 
 def on_connect(client, userdata, flags, rc):
@@ -93,11 +91,9 @@ def on_message(client, userdata, msg):
 
             if work_difficulty != 'ffffffc000000000':
                 # Add work multiplier logic for V19
-                # work_multiplier = get_work_mult(work_value, work_hash)
-                work_multiplier = "1.2"
+                # work_multiplier = get_work_mult()
+                work_multiplier = "1"
             else:
-                # Add work multiplier logic for V19
-                # work_multiplier = get_work_mult(work_value, work_hash)
                 work_multiplier = "1"
 
             time_diff_micro = (datetime.now() - request_time).microseconds

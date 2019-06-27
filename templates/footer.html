@@ -3,6 +3,7 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="static/mqtt.min.js"></script>
 
 <script>
     var interval = 60000;
@@ -171,6 +172,115 @@ $(document).ready(function() {
         }
     });
 } */
+
+var work_timing = [];
+
+var wsChart = new Chart(document.getElementById('wsChart'), {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [{
+      label: 'Request',
+      data: [],
+      backgroundColor: '#f44336',
+      borderColor: '#f44336',
+      borderWidth: 1,
+      fill: false
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      yAxes: [{
+        display: true,
+        ticks: {
+          beginAtZero: true
+        },
+        scaleLabel: {
+          display: true,
+          labelString: 'Time in ms'
+        }
+      }]
+    }
+  }
+});
+
+for (let i = 25; i > 0; i--) {
+  wsChart.data.labels.push(i)
+  wsChart.data.datasets.forEach((dataset) => {
+      dataset.data.push(0);
+  });
+  wsChart.update();
+}
+
+var work_map = new Map();
+
+var client = mqtt.connect('mqtts://client:client@dpow.nanocenter.org/mqtt/')
+client.on("connect", function () {
+    console.log('MQTT connected')
+
+    initMqtt();
+});
+
+client.on("error", function (error) {
+  alert('MQTT error:', error)
+  console.log('MQTT error:', error)
+});
+
+function initMqtt(){
+  // subscribe to all necessary channels
+  client.subscribe([
+    'work/#',
+    'client/#'
+  ]);
+
+  client.on("message", function (topic, payload) {
+    // force string type
+    payload = payload + '';
+
+    // to get the subtopics
+    var topic_split = topic.split('/');
+    var message_type = topic_split[0];
+    var date = new Date();
+    var timestamp = date.getTime();
+
+    if (message_type == 'work') {
+      var splits = payload.split(',');
+
+      var block_hash = splits[0];
+      work_map.set(block_hash, timestamp);
+    } else if (message_type == 'client') {
+      var obj = JSON.parse(payload);
+      console.log(obj);
+
+      var block_hash = obj.block_rewarded;
+      if (!work_map.has(block_hash)) {
+        console.log('result without logging request: ' + block_hash);
+        return;
+      }
+
+      var req_time = work_map.get(block_hash);
+
+      var ms_diff = Math.abs(req_time - timestamp);
+      var second_diff = ms_diff / 1000;
+      second_diff = second_diff.toFixed(3);
+
+      console.log('result', block_hash, second_diff);
+
+      wsChart.data.datasets[0].data.push(second_diff)
+
+      if (wsChart.data.datasets[0].data.length > 25) {
+        wsChart.data.datasets[0].data.shift();
+      }
+
+      wsChart.update();
+
+      work_map.delete(block_hash);
+    } else {
+      console.log('unknown topic: ', topic, payload);
+    }
+  });
+}
 </script>
 
 <script>
