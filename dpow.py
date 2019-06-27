@@ -132,7 +132,7 @@ def upcheck():
     response = requests.get(post_url)
     if response.text != 'up':
         return 'Offline'
-    return 'Online'
+    return 'up'
 
 
 @app.route("/")
