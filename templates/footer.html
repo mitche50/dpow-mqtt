@@ -194,6 +194,9 @@ var wsChart = new Chart(document.getElementById('wsChart'), {
     },
     responsive: true,
     scales: {
+      xAxes: [{
+        display: false
+      }],
       yAxes: [{
         display: true,
         ticks: {
@@ -201,7 +204,7 @@ var wsChart = new Chart(document.getElementById('wsChart'), {
         },
         scaleLabel: {
           display: true,
-          labelString: 'Time in ms'
+          labelString: 'Time in Seconds'
         }
       }]
     }
@@ -209,7 +212,7 @@ var wsChart = new Chart(document.getElementById('wsChart'), {
 });
 
 for (let i = 25; i > 0; i--) {
-  wsChart.data.labels.push(i)
+  wsChart.data.labels.push('')
   /*wsChart.data.datasets.forEach((dataset) => {
       dataset.data.push(0);
   });*/
@@ -254,7 +257,8 @@ function initMqtt(){
       work_map.set(block_hash, timestamp);
     } else if (message_type == 'client') {
       var obj = JSON.parse(payload);
-      console.log(obj);
+      var overall_pow = parseInt($("#pow_count").text());
+      var pow_24hr = parseInt($("#pow_24hr").text());
 
       var block_hash = obj.block_rewarded;
       if (!work_map.has(block_hash)) {
@@ -268,7 +272,19 @@ function initMqtt(){
       var second_diff = ms_diff / 1000;
       second_diff = second_diff.toFixed(3);
 
-      console.log('result', block_hash, second_diff);
+      if (pow_24hr == -1) {
+        $("#pow_24hr").removeClass("dpow-bad");
+        $("#pow_24hr").addClass("dpow-none");
+      } else if (overall_pow == 0) {
+        $("#pow_24hr").removeClass("dpow-none");
+        $("#pow_24hr").addClass("dpow-good");
+      }
+
+      overall_pow++;
+      pow_24hr++;
+
+      $("#pow_count").text(overall_pow);
+      $("#pow_24hr").text(pow_24hr);
 
       wsChart.data.datasets[0].data.push(second_diff)
 

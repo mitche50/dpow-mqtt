@@ -71,11 +71,11 @@
           </div>
             <div style="display:inline-block; vertical-align:top">
                 {% if work_24hr < 0 %}
-                  <p class="dpow-bad">{{work_24hr}}</p>
+                  <p id="pow_24hr" class="dpow-bad">{{work_24hr}}</p>
                 {% elif work_24hr == 0 %}
-                  <p class="dpow-none">{{work_24hr}}</p>
+                  <p id="pow_24hr" class="dpow-none">{{work_24hr}}</p>
                 {% else %}
-                  <p class="dpow-good">+{{work_24hr}}</p>
+                  <p id="pow_24hr" class="dpow-good">+{{work_24hr}}</p>
                 {% endif %}
             </div>
           </div>
@@ -232,7 +232,7 @@
                                 Address
                             </th>
                             <th scope="col" style="text-align:center;">
-                                Precache Work
+                                Precached Work
                             </th>
                             <th scope="col" style="text-align:center;">
                                 On Demand Work
@@ -401,7 +401,7 @@
             borderWidth: 1
             },
             {
-            label: 'Precache',
+            label: 'Precached',
             data: avg_precache_table,
             backgroundColor: 'rgba(193, 66, 66, 0.2)',
             borderColor: 'rgba(193, 66, 66, 1)',
