@@ -18,15 +18,16 @@
         <div style="display:inline-block">
             <h1 class="text-left">{{client_count}}</h1>
         </div>
-        <div style="display:inline-block; vertical-align:top">
-            {% if clients_24hr < 0 %}
-              <p class="dpow-bad">{{clients_24hr}}</p>
-            {% elif clients_24hr == 0 %}
-              <p class="dpow-none">{{clients_24hr}}</p>
-            {% else %}
-              <p class="dpow-good">+{{clients_24hr}}</p>
-            {% endif %}
-        </div>
+<!--        Removed due to 24hr not working properly-->
+<!--        <div style="display:inline-block; vertical-align:top">-->
+<!--             if clients_24hr < 0 -->
+<!--              <p class="dpow-bad">clients_24hr</p>-->
+<!--             elif clients_24hr == 0 %}-->
+<!--              <p class="dpow-none">clients_24hr</p>-->
+<!--             else -->
+<!--              <p class="dpow-good">+clients_24hr</p>-->
+<!--             endif -->
+<!--        </div>-->
       </div>
     </div>
     <div class="card mb-4 shadow-sm">
@@ -42,15 +43,16 @@
           <div style="display:inline-block">
             <h1 class="text-left">{{service_count}}</h1>
           </div>
-        <div style="display:inline-block; vertical-align:top">
-            {% if services_24hr < 0 %}
-              <p class="dpow-bad">{{services_24hr}}</p>
-            {% elif services_24hr == 0 %}
-              <p class="dpow-none">{{services_24hr}}</p>
-            {% else %}
-              <p class="dpow-good">+{{services_24hr}}</p>
-            {% endif %}
-        </div>
+<!--        Removed due to 24hr not working properly-->
+<!--        <div style="display:inline-block; vertical-align:top">-->
+<!--             if services_24hr < 0 -->
+<!--              <p class="dpow-bad">services_24hr</p>-->
+<!--             elif services_24hr == 0 -->
+<!--              <p class="dpow-none">services_24hr</p>-->
+<!--             else -->
+<!--              <p class="dpow-good">+services_24hr</p>-->
+<!--             endif -->
+<!--        </div>-->
           <div style="display:inline-block">
               <p style="font-size: x-small; color:grey; text-align:right; padding-left: 20px">{{listed_services}} listed</p>
           </div>
@@ -90,7 +92,7 @@
                 <span class="powtooltiptext">Average work difficulty as a factor of the base difficulty of Nano.  The higher the factor, the more computational power it takes to solve the PoW.</span>
             </div>
             <div><br></div>
-            <div style="display:inline-block; float:left;">
+            <div style="display:inline-block; text-align: center;">
                 <h1 style="display:inline;">
                     {% if avg_difficulty %}
                         {{avg_difficulty}}
@@ -99,15 +101,16 @@
                     {% endif %}
                 </h1><p style="display:inline;">x</p>
             </div>
-            <div style="display:inline-block; vertical-align:top">
-                {% if diff_24hr == None or diff_24hr == 0 %}
-                  <p class="dpow-none">{% if diff_24hr == None %} 0 {% else %}{{diff_24hr}}{% endif %}</p>
-                {% elif diff_24hr < 0 %}
-                  <p class="dpow-bad">{{diff_24hr}}</p>
-                {% else %}
-                  <p class="dpow-good">+{{diff_24hr}}</p>
-                {% endif %}
-            </div>
+<!--        Removed due to 24hr not working properly-->
+<!--            <div style="display:inline-block; vertical-align:top">-->
+<!--                 if diff_24hr == None or diff_24hr == 0 -->
+<!--                  <p class="dpow-none"> if diff_24hr == None  0  else diff_24hr endif </p>-->
+<!--                 elif diff_24hr < 0 -->
+<!--                  <p class="dpow-bad">diff_24hr</p>-->
+<!--                 else -->
+<!--                  <p class="dpow-good">+diff_24hr</p>-->
+<!--                 endif -->
+<!--            </div>-->
         </div>
     </div>
     </div>
@@ -271,7 +274,7 @@
                                 Address
                             </th>
                             <th scope="col" style="text-align:center;">
-                                Precached Work
+                                Precache Work
                             </th>
                             <th scope="col" style="text-align:center;">
                                 On Demand Work
@@ -402,7 +405,7 @@
             borderWidth: 1
             },
             {
-            label: 'Precached',
+            label: 'Precache',
             data: avg_precache_table,
             backgroundColor: 'rgba(193, 66, 66, 0.2)',
             borderColor: 'rgba(193, 66, 66, 1)',
@@ -447,7 +450,7 @@
                 borderWidth: 1
             },
             {
-                label: 'Precached',
+                label: 'Precache',
                 data: avg_precache_time,
                 backgroundColor: 'rgba(193, 66, 66, 0.2)',
                 borderColor: 'rgba(193, 66, 66, 1)',

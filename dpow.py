@@ -174,20 +174,20 @@ def index():
     client_count = int(client_count_data[0][0])
 
     # Get 24hr differences
-    services_24hr_data = db.get_db_data(services_24hr_call)
-    services_24hr = services_24hr_data[0][0]
-    if services_24hr is None:
-        services_24hr = 0
-
-    clients_24hr_data = db.get_db_data(clients_24hr_call)
-    clients_24hr = clients_24hr_data[0][0]
-    if clients_24hr is None:
-        clients_24hr = 0
+    # services_24hr_data = db.get_db_data(services_24hr_call)
+    # services_24hr = services_24hr_data[0][0]
+    # if services_24hr is None:
+    #     services_24hr = 0
+    #
+    # clients_24hr_data = db.get_db_data(clients_24hr_call)
+    # clients_24hr = clients_24hr_data[0][0]
+    # if clients_24hr is None:
+    #     clients_24hr = 0
 
     work_24hr_data = db.get_db_data(work_24hr_call)
     work_24hr = work_24hr_data[0][0]
-    diff_24hr_data = db.get_db_data(diff_24hr_call)
-    diff_24hr = diff_24hr_data[0][0]
+    # diff_24hr_data = db.get_db_data(diff_24hr_call)
+    # diff_24hr = diff_24hr_data[0][0]
 
     # Get info for Services section
     services_table = db.get_db_data(services_call)
@@ -241,11 +241,12 @@ def index():
     return render_template('index.html', pow_count=pow_count, on_demand_ratio=on_demand_ratio,
                            precache_ratio=precache_ratio, service_count=service_count, client_count=client_count,
                            listed_services=listed_services, unlisted_services=unlisted_services,
-                           services_24hr=services_24hr, clients_24hr=clients_24hr, work_24hr=work_24hr,
+                           # services_24hr=services_24hr, clients_24hr=clients_24hr,
+                           work_24hr=work_24hr,
                            services_table=services_table, unlisted_count=unlisted_count, unlisted_pow=unlisted_pow,
                            clients_table=clients_table, day_total=day_total, hour_total=hour_total,
                            minute_total=minute_total, avg_overall=avg_overall, avg_combined_time=avg_combined_time,
-                           avg_difficulty=avg_difficulty, requests_avg=requests_avg, diff_24hr=diff_24hr,
+                           avg_difficulty=avg_difficulty, requests_avg=requests_avg, # diff_24hr=diff_24hr,
                            live_chart_prefill=live_chart_prefill)
 
 
