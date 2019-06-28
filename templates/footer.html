@@ -47,9 +47,18 @@ $(document).ready(function() {
   $('.service_tr').slice(pagelength).hide();
   $('.client_tr').slice(pagelength).hide();
   $("#loadMoreServices").click(function(){
-  	var itemsCount = ((service_pageIndex * pagelength) + pagelength);
-  	$('.service_tr').slice(0, itemsCount).show();
-    service_pageIndex++;
+    if(service_length > ((service_pageIndex * pagelength))){
+      var itemsCount = ((service_pageIndex * pagelength) + pagelength);
+      $('.service_tr').slice(0, itemsCount).show();
+      service_pageIndex++;
+      if(service_length < (service_pageIndex * pagelength)){
+        $('#loadMoreServices').text("Minimize");
+      }
+    } else {
+      $('.service_tr').slice(pagelength).hide();
+      service_pageIndex = 1;
+      $('#loadMoreService').text('Load More ...');
+    }
   });
   $("#loadMoreClients").click(function(){
     if(client_length > ((client_pageIndex * pagelength))){
@@ -59,8 +68,7 @@ $(document).ready(function() {
       if(client_length < (client_pageIndex * pagelength)){
         $('#loadMoreClients').text("Minimize");
       }
-    }
-    else{
+    } else {
       $('.client_tr').slice(pagelength).hide();
       client_pageIndex = 1;
       $('#loadMoreClients').text("Load More ...");
