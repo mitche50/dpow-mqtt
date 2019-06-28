@@ -57,6 +57,7 @@ the client_log and service_log their information to generate the change over 24 
 1. Ensure the log_update.sh file is executable: `sudo chmod +x log_update.sh`
 2. Run `sudo crontab -e` and select whatever editor you're comfortable with.
 3. Insert the following line at the end of the file: `0 2 * * * {YOUR_USERNAME} /path/to/dpow-mqtt/log_update.sh`
+4. Update log_update.sh to direct to the correct path of config.ini: `/path/to/dpow-mqtt/config.ini`
 
 You should now be able to navigate to `http://{YOUR_DOMAIN}` to access the dashboard.
 HTTPS is recommended, but not required.  For more information, google Certbot to easily generate a 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source <(grep = <(grep -A4 '\[db\]' config.ini | sed 's/ *= */=/g'))
+source <(grep = <(grep -A4 '\[db\]' /home/dpow/dpow-mqtt/config.ini | sed 's/ *= */=/g'))
 
 mysql -u $user -p$password -D $schema <<EOF
 
