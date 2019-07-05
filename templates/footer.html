@@ -88,6 +88,7 @@ $(document).ready(function() {
       avgPowChart.data.datasets[0].data = day_data;
       avgPowChart.data.datasets[1].data = day_precache_table;
       avgPowChart.data.datasets[2].data = day_ondemand_table;
+      $("#avgRequests").text({{requests_avg}});
       avgPowChart.options.scales.xAxes = [{
                     type:       "time",
                     distribution: 'series',
@@ -117,6 +118,7 @@ $(document).ready(function() {
       avgPowChart.data.datasets[0].data = hour_data;
       avgPowChart.data.datasets[1].data = hour_precache_table;
       avgPowChart.data.datasets[2].data = hour_ondemand_table;
+      $("#avgRequests").text({{requests_avg_hour}});
       avgPowChart.options.scales.xAxes = [{
                     type:       "time",
                     distribution: 'series',
@@ -146,6 +148,7 @@ $(document).ready(function() {
       avgPowChart.data.datasets[0].data = minute_data;
       avgPowChart.data.datasets[1].data = minute_precache_table;
       avgPowChart.data.datasets[2].data = minute_ondemand_table;
+      $("#avgRequests").text({{requests_avg_min}});
       avgPowChart.options.scales.xAxes = [{
                     type:       "time",
                     distribution: 'series',

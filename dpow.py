@@ -42,18 +42,18 @@ services_call = ("SELECT service_name, service_website, (service_ondemand + serv
                  "FROM services "
                  "WHERE service_name != 'private' "
                  "ORDER BY pow DESC")
-clients_call = ("SELECT t1.client, ( t1.total - IFNULL(t2.ondemand, 0) ), IFNULL(t2.ondemand, 0) FROM "
-                "   (SELECT client, count(client) as total FROM "
-                "   requests GROUP BY client) as t1"
-                " left join "
-                "   (SELECT client, count(client) as ondemand FROM "
-                "   requests WHERE work_type = 'ondemand' GROUP BY client) as t2"
-                " on t1.client = t2.client"
-                " ORDER BY total DESC;")
+clients_call = ("SELECT client_id, IFNULL(ondemand, 0) as ondemand, IFNULL(precache, 0) as precache "
+                "FROM dpow_mqtt.clients ORDER BY (ondemand + precache) DESC")
 avg_difficulty_call = "SELECT round(avg(multiplier),2) FROM requests WHERE response_ts >= NOW() - INTERVAL 30 MINUTE"
 avg_requests_call = ("SELECT date_format(response_ts, '%Y-%m-%d'), count(hash) FROM requests "
                      "WHERE response_ts >= NOW() - INTERVAL 1 MONTH "
                      "GROUP BY date_format(response_ts, '%Y-%m-%d')")
+avg_requests_min_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H:%i'), count(hash) FROM requests "
+                         "WHERE response_ts >= NOW() - INTERVAL 60 minute "
+                         "GROUP BY date_format(response_ts, '%Y-%m-%d %H:%i');")
+avg_requests_hour_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H'), count(hash) FROM requests "
+                          "WHERE response_ts >= NOW() - INTERVAL 24 hour "
+                          "GROUP BY date_format(response_ts, '%Y-%m-%d %H');")
 pow_day_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
                       "FROM "
                       "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as overall "
@@ -173,21 +173,8 @@ def index():
     client_count_data = db.get_db_data(client_count_call)
     client_count = int(client_count_data[0][0])
 
-    # Get 24hr differences
-    # services_24hr_data = db.get_db_data(services_24hr_call)
-    # services_24hr = services_24hr_data[0][0]
-    # if services_24hr is None:
-    #     services_24hr = 0
-    #
-    # clients_24hr_data = db.get_db_data(clients_24hr_call)
-    # clients_24hr = clients_24hr_data[0][0]
-    # if clients_24hr is None:
-    #     clients_24hr = 0
-
     work_24hr_data = db.get_db_data(work_24hr_call)
     work_24hr = work_24hr_data[0][0]
-    # diff_24hr_data = db.get_db_data(diff_24hr_call)
-    # diff_24hr = diff_24hr_data[0][0]
 
     # Get info for Services section
     services_table = db.get_db_data(services_call)
@@ -211,21 +198,33 @@ def index():
     avg_combined_time = db.get_db_data(avg_combined_call)
     avg_overall_data = db.get_db_data(avg_overall_call)
     avg_requests_data = db.get_db_data(avg_requests_call)
+    avg_requests_min = db.get_db_data(avg_requests_min_call)
+    avg_requests_hour = db.get_db_data(avg_requests_hour_call)
     total_requests = 0
     count_requests = 0
+    total_requests_min = 0
+    count_requests_min = 0
+    total_requests_hour = 0
+    count_requests_hour = 0
 
     live_chart_data = db.get_db_data(live_chart_call)
     live_chart_prefill = []
     for row in live_chart_data:
         live_chart_prefill.append(float(row[0]))
 
-    print(live_chart_prefill)
-
     for row in avg_requests_data:
         total_requests += row[1]
         count_requests += 1
+    for row in avg_requests_min:
+        total_requests_min += row[1]
+        count_requests_min += 1
+    for row in avg_requests_hour:
+        total_requests_hour += row[1]
+        count_requests_hour += 1
 
     requests_avg = int(total_requests / count_requests)
+    requests_avg_hour = int(total_requests_hour / count_requests_hour)
+    requests_avg_min = int(total_requests_min / count_requests_min)
 
     if avg_overall_data[0][0] is not None:
         avg_overall = round(float(avg_overall_data[0][0]), 1)
@@ -240,14 +239,13 @@ def index():
 
     return render_template('index.html', pow_count=pow_count, on_demand_ratio=on_demand_ratio,
                            precache_ratio=precache_ratio, service_count=service_count, client_count=client_count,
-                           listed_services=listed_services, unlisted_services=unlisted_services,
-                           # services_24hr=services_24hr, clients_24hr=clients_24hr,
-                           work_24hr=work_24hr,
+                           listed_services=listed_services, unlisted_services=unlisted_services, work_24hr=work_24hr,
                            services_table=services_table, unlisted_count=unlisted_count, unlisted_pow=unlisted_pow,
                            clients_table=clients_table, day_total=day_total, hour_total=hour_total,
                            minute_total=minute_total, avg_overall=avg_overall, avg_combined_time=avg_combined_time,
-                           avg_difficulty=avg_difficulty, requests_avg=requests_avg, # diff_24hr=diff_24hr,
-                           live_chart_prefill=live_chart_prefill)
+                           avg_difficulty=avg_difficulty, requests_avg=requests_avg,
+                           live_chart_prefill=live_chart_prefill, requests_avg_hour=requests_avg_hour,
+                           requests_avg_min=requests_avg_min)
 
 
 if __name__ == "__main__":

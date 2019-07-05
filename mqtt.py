@@ -58,6 +58,7 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe('work/#')
     client.subscribe('result/#')
     client.subscribe('statistics')
+    client.subscribe('client/#')
 
 
 def on_message(client, userdata, msg):
@@ -129,6 +130,23 @@ def on_message(client, userdata, msg):
             except Exception as e:
                 logger.info("Error logger.infoing public services: {}".format(e))
                 logger.info(stats)
+
+        elif topic[0] == 'client':
+            try:
+                result = json.loads(msg.payload.decode())
+                address = topic[1]
+                precache = result['precache']
+                ondemand = result['ondemand']
+                client_call = ("INSERT INTO clients"
+                               " (client_id, precache, ondemand)"
+                               " VALUES (%s, %s, %s)"
+                               " ON DUPLICATE KEY UPDATE precache = VALUES(precache),"
+                               " ondemand = VALUES(ondemand);")
+                db.set_db_data(client_call, [address, precache, ondemand])
+
+            except Exception as e:
+                logger.info("error logging client info: {}".format(e))
+                logger.info(msg.payload)
         else:
             try:
                 logger.info("UNEXPECTED MESSAGE")
