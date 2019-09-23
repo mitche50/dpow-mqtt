@@ -272,8 +272,8 @@ function initMqtt(){
       work_map.set(block_hash, timestamp);
     } else if (message_type == 'client') {
       var obj = JSON.parse(payload);
-      var overall_pow = parseInt($("#pow_count").text());
-      var pow_24hr = parseInt($("#pow_24hr").text());
+      var overall_pow = +$("#pow_count").text().split(',').join('');
+      var pow_24hr = +$("#pow_24hr").text().split(',').join('');
 
       var block_hash = obj.block_rewarded;
       if (!work_map.has(block_hash)) {
@@ -298,7 +298,7 @@ function initMqtt(){
       overall_pow++;
       pow_24hr++;
 
-      $("#pow_count").text(overall_pow);
+      $("#pow_count").text(overall_pow.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
       if (pow_24hr >= 1) {
         $("#pow_24hr").text("+" + pow_24hr);
       } else {
