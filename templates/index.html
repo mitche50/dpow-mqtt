@@ -1,13 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
 <body>
-<p id="status-indicator"></p>
-<div class="container">
-<h2>Overview</h2>
+
+<div class="main-container container">
+<div class="status-div">
+  <h2 class="overview-header">Overview</h2>
+  <p id="status-indicator" class="status-indicator"></p>
+</div>
 <div class="card-deck mb-3 text-center">
   <div class="card mb-4 shadow-sm">
+      <div class="client-card-header card-one"></div>
       <div class="card-body">
-        <div style="display:inline-block">
+        <div class="card-header-text">
             <p class="card-text">Clients Connected</p>
         </div>
         <div class="powtooltip">
@@ -31,13 +35,14 @@
       </div>
     </div>
     <div class="card mb-4 shadow-sm">
+        <div class="client-card-header card-two"></div>
         <div class="card-body">
-        <div style="display:inline-block">
+        <div class="card-header-text">
             <p class="card-text">Registered Services</p>
         </div>
         <div class="powtooltip">
             <i class="far fa-question-circle"></i>
-            <span class="powtooltiptext">Total number of services utilizing the dPoW network.</span>
+            <span class="powtooltiptext">Total number of services utilizing the BPoW network.</span>
         </div>
         <div><br></div>
           <div style="display:inline-block">
@@ -53,19 +58,17 @@
 <!--              <p class="dpow-good">+services_24hr</p>-->
 <!--             endif -->
 <!--        </div>-->
-          <div style="display:inline-block">
-              <p style="font-size: x-small; color:grey; text-align:right; padding-left: 20px">{{listed_services}} listed</p>
-          </div>
         </div>
     </div>
     <div class="card mb-4 shadow-sm">
+        <div class="client-card-header card-three"></div>
         <div class="card-body">
-        <div style="display:inline-block">
+        <div class="card-header-text">
             <p class="card-text">Requests in Past 24 Hours</p>
         </div>
         <div class="powtooltip">
             <i class="far fa-question-circle"></i>
-            <span class="powtooltiptext">Total number of work requests processed by the dPoW network in the past 24 hours.</span>
+            <span class="powtooltiptext">Total number of work requests processed by the BPoW network in the past 24 hours.</span>
         </div>
         <div><br></div>
           <div style="display:inline-block">
@@ -83,13 +86,14 @@
           </div>
         </div>
     <div class="card mb-4 shadow-sm">
+        <div class="client-card-header card-four"></div>
         <div class="card-body">
-            <div style="display:inline-block">
+            <div class="card-header-text">
                 <p class="card-text">Average Difficulty</p>
             </div>
             <div class="powtooltip">
                 <i class="far fa-question-circle"></i>
-                <span class="powtooltiptext">Average work difficulty as a factor of the base difficulty of Nano.  The higher the factor, the more computational power it takes to solve the PoW.</span>
+                <span class="powtooltiptext">Average work difficulty as a factor of the base difficulty of Banano.  The higher the factor, the more computational power it takes to solve the PoW.</span>
             </div>
             <div><br></div>
             <div style="display:inline-block; text-align: center;">
@@ -119,10 +123,10 @@
   <div class="card mb-4 shadow-sm">
       <div class="card-body">
         <div class="d-flex justify-content-between w-100">
-          <p class="card-text text-left">Average Requests</p>
+          <p class="card-text text-left card-header-text">Average Requests</p>
           <div class="powtooltip">
             <i class="far fa-question-circle"></i>
-            <span class="powtooltiptext">Average number of work requests processed by the DPoW network.  Timezone is UTC.</span>
+            <span class="powtooltiptext">Average number of work requests processed by the BPoW network.  Timezone is UTC.</span>
           </div>
         </div>
           <div class="row">
@@ -143,10 +147,10 @@
     <div class="card mb-4 shadow-sm">
       <div class="card-body">
         <div class="d-flex justify-content-between w-100">
-          <p class="card-text text-left">Average Response Time</p>
+          <p class="card-text text-left card-header-text">Average Response Time</p>
           <div class="powtooltip">
             <i class="far fa-question-circle"></i>
-            <span class="powtooltiptext">Average Time it takes to provide a work value on the DPoW network.  Timezone is UTC.</span>
+            <span class="powtooltiptext">Average Time it takes to provide a work value on the BPoW network.  Timezone is UTC.</span>
           </div>
         </div>
         <h1 class="text-left">{{avg_overall}}s</h1>
@@ -159,7 +163,8 @@
 
 <div class="container">
     <div class="row">
-        <div class="col">
+        <!--TODO: Add total Banano paid out-->
+        <!--<div class="col">
         <div class="row-fluid"><h2>Donations</h2></div>
         <div class="row-fluid">
             <div class="card-deck mb-4 text-center">
@@ -176,7 +181,7 @@
             </div>
         </div>
         </div>
-        </div>
+        </div>-->
         <div class="col">
         <div class="row-fluid"><h2>Live Response Time</h2></div>
             <div class="row-fluid">
@@ -196,19 +201,19 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container service-client-container">
     <div class="row">
         <div class="col">
         <div class="row-fluid"><h2>Services</h2></div>
-        <div class="row-fluid">
-            <div class="card-deck mb-4 text-center">
+        <div class="row-fluid cs-row">
+            <div class="card-deck mb-4 text-center cs-card">
           <div class="card mb-4 shadow-sm">
               <div class="card-body">
                 <div class="powtooltip" style="padding-bottom:20px;">
-                    <i class="far fa-question-circle"  ></i>
-                    <span class="powtooltiptext">A list of Services utilizing the DPoW Network.  If a website is provided, clicking on the Service name will send you to their home page.</span>
-                </div>
-                <table class="table table-sm table-striped" style="overflow-wrap: break-word; max-width: 100%;">
+                    <i class="far fa-question-circle" style="position: relative;" ></i>
+                    <span class="powtooltiptext">A list of Services utilizing the BPoW Network.  If a website is provided, clicking on the Service name will send you to their home page.</span>
+                </div><br>
+                <table>
                     <thead>
                       <tr>
                         <th scope="col" style="text-align:middle;">
@@ -256,15 +261,15 @@
         </div>
         <div class="col">
         <div class="row-fluid"><h2>Clients</h2></div>
-            <div class="row-fluid">
-                <div class="card-deck mb-4 text-center">
+            <div class="row-fluid cs-row">
+                <div class="card-deck mb-4 text-center cs-card">
                 <div class="card mb-4 shadow-sm">
-                  <div class="card-body client-card">
+                  <div class="card-body">
                     <div class="powtooltip" style="padding-bottom:20px;">
                       <i class="far fa-question-circle"></i>
-                      <span class="powtooltiptext">A ranked list of payout addresses for clients providing work.  Clicking on the address will take you to Nano Crawler to see the payouts provided.</span>
+                      <span class="powtooltiptext">A ranked list of payout addresses for clients providing work.  Clicking on the address will take you to Banano Creeper to see the payouts provided.</span>
                     </div>
-                    <table class="table table-sm table-striped" style="overflow-wrap: break-word; max-width: 100%;">
+                    <table style="overflow-wrap: break-word; max-width: 100%;">
                         <thead>
                             <tr>
                             <th scope="col" style="text-align:center;">
@@ -285,7 +290,7 @@
                         {% for row in clients_table %}
                         <tr class="client_tr">
                             <td class="client_td"><b>{{loop.index}}</b></td>
-                            <td style="text-align: center;"><a href="https://nanocrawler.cc/explorer/account/{{row[0]}}"><u>{{row[0][:7]}}...{{row[0][-5:]}}</u></a></td>
+                            <td style="text-align: center;"><a href="https://creeper.banano.cc/explorer/account/{{row[0]}}"><u>{{row[0][:7]}}...{{row[0][-5:]}}</u></a></td>
                             {% if row[1] %}
                             <td class="client_td">{{row[1]}}</td>
                             {% else %}
@@ -307,13 +312,18 @@
 
 
 <div class="footer-text">
-    <small>Developed by Andrew Mitchell.  View my other projects at <a href="https://andrewgmitchell.com">andrewgmitchell.com</a><br>
-    If you would like to donate directly to me for the Dashboard, you can send Nano using <a href="https://nanote.net/pay/758b6c10-89fc-11e8-8cbe-b1db379191f2">this link</a></small>
+    <small>Developed by <strong>Andrew Mitchell.</strong><br>
+      View my other projects at <a href="https://andrewgmitchell.com">andrewgmitchell.com</a><br><br>
+      <div style="display: inline-block">
+          <a class="donate-link" href="ban:ban_1kyxbsqfbc4fpydp5355dznrhhjts1tskgtykicsshwd769owjei17nmgsx3"><div class="donate-ban-button">Donate <strong>BAN</strong></div></a>
+      </div>
+      <br><br>
+    <!--If you would like to donate directly to me for the Dashboard, you can send Banano to <a href="ban:ban_1kyxbsqfbc4fpydp5355dznrhhjts1tskgtykicsshwd769owjei17nmgsx3">ban_1kyxbsqfbc4fpydp5355dznrhhjts1tskgtykicsshwd769owjei17nmgsx3</a>-->
 </div>
 </body>
 <script>
-    var pow_ctx = document.getElementById("powPerMinute");
-    var avg_ctx = document.getElementById("avgPow");
+    var pow_ctx = document.getElementById("powPerMinute").getContext("2d");
+    var avg_ctx = document.getElementById("avgPow").getContext("2d");
     var timeFormat = 'YYYY-MM-DD HH:mm'
     var dayToolTip = 'MMM Do'
     var hourToolTip = 'MMM Do h a'
@@ -394,27 +404,48 @@
     var avg_data = hour_data;
     var avg_precache_table = hour_precache_table;
     var avg_ondemand_table = hour_ondemand_table;
+    var yellow_gradient = pow_ctx.createLinearGradient(0, 0, 0, 200);
+    yellow_gradient.addColorStop(0, 'rgba(255, 236, 106, 0.6)');   
+    yellow_gradient.addColorStop(1, 'rgba(255, 236, 106, 0)');
+    var yellow_gradient_avg = avg_ctx.createLinearGradient(0, 0, 0, 200);
+    yellow_gradient_avg.addColorStop(0, 'rgba(255, 236, 106, 0.6)');   
+    yellow_gradient_avg.addColorStop(1, 'rgba(255, 236, 106, 0)');
+
+    var green_gradient = pow_ctx.createLinearGradient(0, 0, 0, 200);
+    green_gradient.addColorStop(0, 'rgba(63, 191, 63, 0.6)');   
+    green_gradient.addColorStop(1, 'rgba(63, 191, 63, 0)');
+    var green_gradient_avg = avg_ctx.createLinearGradient(0, 0, 0, 200);
+    green_gradient_avg.addColorStop(0, 'rgba(63, 191, 63, 0.6)');   
+    green_gradient_avg.addColorStop(1, 'rgba(63, 191, 63, 0)');
+
+    var red_gradient = pow_ctx.createLinearGradient(0, 0, 0, 200);
+    red_gradient.addColorStop(0, 'rgba(193, 66, 66, 0.6)');   
+    red_gradient.addColorStop(1, 'rgba(193, 66, 66, 0)');
+    var red_gradient_avg = avg_ctx.createLinearGradient(0, 0, 0, 200);
+    red_gradient_avg.addColorStop(0, 'rgba(193, 66, 66, 0.6)');   
+    red_gradient_avg.addColorStop(1, 'rgba(193, 66, 66, 0)');
+
     var avgPowChart = new Chart(pow_ctx, {
         type: 'line',
         data:{
         datasets: [{
             label: 'Total',
             data: avg_data,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: yellow_gradient,
+            borderColor: 'rgba(251, 221, 17, 1)',
             borderWidth: 1
             },
             {
             label: 'Precache',
             data: avg_precache_table,
-            backgroundColor: 'rgba(193, 66, 66, 0.2)',
+            backgroundColor: red_gradient,
             borderColor: 'rgba(193, 66, 66, 1)',
             borderWidth: 1
             },
             {
             label: 'On Demand',
             data: avg_ondemand_table,
-            backgroundColor: 'rgba(63, 191, 63, 0.2)',
+            backgroundColor: green_gradient,
             borderColor: 'rgba(63, 191, 63, 1)',
             borderWidth: 1
             }]
@@ -445,21 +476,21 @@
             datasets: [{
                 label: 'Combined',
                 data: combined_time,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: yellow_gradient_avg,
+                borderColor: 'rgba(251, 221, 17, 1)',
                 borderWidth: 1
             },
             {
                 label: 'Precache',
                 data: avg_precache_time,
-                backgroundColor: 'rgba(193, 66, 66, 0.2)',
+                backgroundColor: red_gradient_avg,
                 borderColor: 'rgba(193, 66, 66, 1)',
                 borderWidth: 1
             },
             {
                 label: 'On Demand',
                 data: avg_ondemand_time,
-                backgroundColor: 'rgba(63, 191, 63, 0.2)',
+                backgroundColor: green_gradient_avg,
                 borderColor: 'rgba(63, 191, 63, 1)',
                 borderWidth: 1
             }],

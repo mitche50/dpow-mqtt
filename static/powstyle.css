@@ -1,9 +1,91 @@
+:root{
+  --main-background: #212124;
+  --card-header: #2C2C30;
+  --green: #87E086;
+  --yellow: #FFEC6A;
+  --orange: #FFA86A;
+  --red: #FF6A6A;
+  --main-text: #CFCED9;
+  --graph-main: #939399;
+  --graph-bg: #3B3B3D;
+}
+
+@font-face{
+  font-family: Metropolis;
+  src: url('Metropolis-Regular.otf');
+}
+
+@font-face{
+  font-family: Metropolis-Medium;
+  src: url('Metropolis-Medium.otf');
+}
+
+@font-face{
+  font-family: Metropolis-Bold;
+  src: url('Metropolis-Bold.otf');
+}
+
+@font-face{
+  font-family: Metropolis-Semibold;
+  src: url('Metropolis-SemiBold.otf');
+}
+
+body {
+  font-family: 'Metropolis-Semibold';
+  font-size: 14pt;
+  color: var(--main-text);
+}
+
+a {
+  color: var(--green);
+}
+
+a:hover {
+  filter:brightness(80%);
+  color: var(--green) !important;
+}
+
+table {
+  width: 100%;
+  position: relative; 
+  overflow-wrap: break-word; 
+  max-width: 100%;
+}
+
+th {
+  font-family: 'Metropolis-SemiBold';
+  font-size: 12pt;
+}
+
+@media (min-width:640px) {
+  .container {
+    max-width: 85%;
+  }
+}
+
+.service-client-container {
+  min-height: 350px;
+}
+
+.cs-row {
+  height: 100%;
+}
+
+.cs-card {
+  height: 80%;
+}
+
 .powtooltip {
     position: relative;
     display: inline-block;
-    float:right;
+    float: right;
     color:grey;
     font-size:75%;
+}
+
+.card-header-text {
+  max-width: 85%;
+  display: inline-block;
 }
 
 .powtooltip .powtooltiptext {
@@ -34,7 +116,6 @@
 
 .avgPowButton {
   font-size: 12px;
-  outline: #4691E3;
   -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
@@ -46,17 +127,10 @@
   margin: 2px;
   border-radius: 10px;
   display: inline-block;
-  color: grey;
-  background-color: white;
-}
-
-.avgPowButton:hover {
-  box-shadow: 2px 5px 10px -5px #4691E3;
 }
 
 .avgPowButtonActive {
   font-size: 12px;
-  outline: #4691E3;
   -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
@@ -68,10 +142,17 @@
   margin: 2px;
   border-radius: 10px;
   display: inline-block;
-  color: grey;
-  background-color: #4691E3;
-  color: white;
-  opacity: .8;
+  color: var(--card-header);
+  background-color: var(--green);
+}
+
+tbody tr:nth-child(odd) {
+  background-color: var(--graph-bg);
+}
+
+tbody tr {
+  font-family: "Metropolis";
+  font-size: 12pt;
 }
 
 div.footer-text {
@@ -84,8 +165,101 @@ div.footer-text {
   overflow-x: auto;
 }
 
+.client-card-header {
+  width: 100%;
+  height: 8px;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.card-one {
+  background-color: var(--green);
+}
+
+.card-two {
+  background-color: var(--yellow);
+}
+
+.card-three {
+  background-color: var(--orange);
+}
+
+.card-four {
+  background-color: var(--red);
+}
+
+.card {
+  border: none !important;
+  background-color: var(--card-header);
+}
+
 #status-indicator {
   text-align: center;
+}
+
+.status-indicator {
+  display: inline-block;
+  padding-left: 6px;
+  transform: translateY(-30%);
+}
+
+.overview-header {
+  display: inline-block;
+  font-family: 'Metropolis-Bold';
+  size: 30pt;
+}
+
+.status-button {
+  padding-left: 5px;
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard syntax */
+  border: none;
+  color: --main-background;
+  border-radius: 6px;
+  color: var(--main-background) !important;
+  padding: 2px 6px 4px 6px;
+  font-size: 10pt;
+}
+
+.donate-ban-button {
+  border: none;
+  border-radius: 6px;
+  color: var(--main-background) !important;
+  background-color: var(--yellow);
+  padding: 4px 6px 4px 6px;
+  font-size: 10pt;
+}
+
+.donate-link:hover {
+  text-decoration: none;
+}
+
+.status-button:hover {
+  cursor: inherit;
+}
+
+.status-button:active {
+  border: none !important;
+  border-radius: 6px !important;
+  border-color: var(--main-background) !important;
+}
+
+.status-ok {
+  background-color: var(--green);
+}
+
+.status-down {
+  background-color: var(--red);
+}
+
+.status-div {
+  padding-top: 20px;
+  color: var(--main-text);
 }
 
 span.dpow-bad {
@@ -121,4 +295,31 @@ span.dpow-good {
 
 .client_td {
   text-align: center;
+}
+
+.nav-item {
+  font-family: 'Metropolis-Medium';
+  size: 14pt;
+  color: var(--main-text) !important;
+  text-decoration: none !important;
+}
+
+.nav-link {
+  color: inherit !important;
+}
+
+.navbar-brand {
+  position: absolute;
+  left: 50%;
+  transform:translateX(-50%);
+  display: block;
+  height: 100%;
+}
+
+.navbar-image {
+  height: 100%;
+}
+
+.navbar {
+  background-color: var(--card-header);
 }

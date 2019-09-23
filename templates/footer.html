@@ -12,10 +12,10 @@
                 url: '/upcheck',
                 success: function (data) {
                     if (data == 'up') {
-                        $('#status-indicator').html('Status: <span class="dpow-good">Online</span>');
+                        $('#status-indicator').html('<a class="status-ok status-button">Status: <strong>Online</strong></a>');
                     }
                     else {
-                        $('#status-indicator').html('Status: <span class="dpow-bad">Offline</span>');
+                        $('#status-indicator').html('<a class="status-down status-button">Status: <strong>Online</strong></a>');
                     }
                 },
                 complete: function (data) {
@@ -36,6 +36,7 @@ $(document).ready(function() {
   var client_length = $('.client_tr').length
   var service_length = $('.service_tr').length
   var load_time = Math.round((new Date()).getTime() / 1000);
+
   // setTimeout(fetchdata(load_time), 5000);
   if(client_length <= pagelength){
     $('#loadMoreClients').hide()
@@ -185,16 +186,19 @@ $(document).ready(function() {
 } */
 
 var work_timing = [];
-
-var wsChart = new Chart(document.getElementById('wsChart'), {
+var ctx = document.getElementById('wsChart').getContext("2d");
+var yellow_gradient = ctx.createLinearGradient(0, 0, 0, 500);
+yellow_gradient.addColorStop(0, 'rgba(255, 236, 106, 0.6)');   
+yellow_gradient.addColorStop(1, 'rgba(255, 236, 106, 0)');
+var wsChart = new Chart(ctx, {
   type: 'line',
   data: {
     labels: [],
     datasets: [{
       label: 'Response Time',
       data: {{live_chart_prefill}},
-      backgroundColor: 'rgba(54, 162, 235, 0.2)',
-      borderColor: 'rgba(54, 162, 235, 1)',
+      backgroundColor: yellow_gradient,
+      borderColor: 'rgba(251, 221, 17, 1)',
       borderWidth: 1
     }]
   },
