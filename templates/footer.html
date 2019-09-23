@@ -290,7 +290,7 @@ function initMqtt(){
       if (pow_24hr == -1) {
         $("#pow_24hr").removeClass("dpow-bad");
         $("#pow_24hr").addClass("dpow-none");
-      } else if (overall_pow == 0) {
+      } else if (pow_24hr == 0) {
         $("#pow_24hr").removeClass("dpow-none");
         $("#pow_24hr").addClass("dpow-good");
       }
@@ -299,7 +299,11 @@ function initMqtt(){
       pow_24hr++;
 
       $("#pow_count").text(overall_pow);
-      $("#pow_24hr").text(pow_24hr);
+      if (pow_24hr >= 1) {
+        $("#pow_24hr").text("+" + pow_24hr);
+      } else {
+        $("#pow_24hr").text(pow_24hr);
+      }
 
       wsChart.data.datasets[0].data.push(second_diff)
 
