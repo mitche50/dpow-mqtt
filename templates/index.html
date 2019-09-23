@@ -89,7 +89,7 @@
         <div class="client-card-header card-four"></div>
         <div class="card-body">
             <div class="card-header-text">
-                <p class="card-text">Total Distributed</p>
+                <p class="card-text">Total BAN Distributed</p>
             </div>
             <div class="powtooltip">
                 <i class="far fa-question-circle"></i>
@@ -99,11 +99,11 @@
             <div style="display:inline-block; text-align: center;">
                 <h1 style="display:inline;">
                     {% if total_distributed %}
-                      {{ "{0:.2f} BANANO".format(total_distributed) }}
+                      {{ "{0:,.2f}".format(total_distributed) }}
                     {% else %}
-                        0 BANANO
+                        0
                     {% endif %}
-                </h1><p style="display:inline;">x</p>
+                </h1>
             </div>
 <!--        Removed due to 24hr not working properly-->
 <!--            <div style="display:inline-block; vertical-align:top">-->
