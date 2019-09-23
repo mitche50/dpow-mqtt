@@ -89,19 +89,19 @@
         <div class="client-card-header card-four"></div>
         <div class="card-body">
             <div class="card-header-text">
-                <p class="card-text">Average Difficulty</p>
+                <p class="card-text">Total Distributed</p>
             </div>
             <div class="powtooltip">
                 <i class="far fa-question-circle"></i>
-                <span class="powtooltiptext">Average work difficulty as a factor of the base difficulty of Banano.  The higher the factor, the more computational power it takes to solve the PoW.</span>
+                <span class="powtooltiptext">The amount of BANANO that has been distributed to all of the BoomPow workers.</span>
             </div>
             <div><br></div>
             <div style="display:inline-block; text-align: center;">
                 <h1 style="display:inline;">
-                    {% if avg_difficulty %}
-                        {{avg_difficulty}}
+                    {% if total_distributed %}
+                      {{ "{0:.2f} BANANO".format(total_distributed) }}
                     {% else %}
-                        1.0
+                        0 BANANO
                     {% endif %}
                 </h1><p style="display:inline;">x</p>
             </div>
