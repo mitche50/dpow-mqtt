@@ -156,8 +156,15 @@ tbody tr {
 }
 
 div.footer-text {
+  position: relative;
+  padding-top: 10px;
+  padding-bottom: 10px;
   text-align: center;
   text-decoration: none;
+}
+
+*:focus {
+  outline: none;
 }
 
 .client-card {
@@ -241,6 +248,7 @@ div.footer-text {
 
 .status-button:hover {
   cursor: inherit;
+  color: var(--main-background);
 }
 
 .status-button:active {
