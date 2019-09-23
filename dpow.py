@@ -6,8 +6,20 @@ import json
 import logging
 import os
 import requests
+import redis
 
 import modules.db as db
+
+# Read config and parse constants
+config = configparser.ConfigParser()
+config.read('{}/config.ini'.format(os.getcwd()))
+
+# Create redis instance
+REDIS_HOST = config.get('redis', 'host')
+REDIS_PORT = int(config.get('redis', 'port'))
+REDIS_DB = int(config.get('redis', 'db'))
+
+redisInst = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
 
 logger = logging.getLogger("dpow_log")
 logger.setLevel(logging.INFO)
@@ -231,11 +243,9 @@ def index():
     else:
         avg_overall = 0
 
-    avg_difficulty_data = db.get_db_data(avg_difficulty_call)
-    if avg_difficulty_data[0][0] is not None:
-        avg_difficulty = round(avg_difficulty_data[0][0], 1)
-    else:
-        avg_difficulty = 1.0
+    # Get total distributed
+    total_paid_banano = redisInst.get("bpowdash:totalpaidban")
+    total_paid_banano = float(total_paid_banano) if total_paid_banano is not None else 0.0
 
     return render_template('index.html', pow_count=pow_count, on_demand_ratio=on_demand_ratio,
                            precache_ratio=precache_ratio, service_count=service_count, client_count=client_count,
@@ -243,7 +253,7 @@ def index():
                            services_table=services_table, unlisted_count=unlisted_count, unlisted_pow=unlisted_pow,
                            clients_table=clients_table, day_total=day_total, hour_total=hour_total,
                            minute_total=minute_total, avg_overall=avg_overall, avg_combined_time=avg_combined_time,
-                           avg_difficulty=avg_difficulty, requests_avg=requests_avg,
+                           total_distributed=total_paid_banano, requests_avg=requests_avg,
                            live_chart_prefill=live_chart_prefill, requests_avg_hour=requests_avg_hour,
                            requests_avg_min=requests_avg_min)
 

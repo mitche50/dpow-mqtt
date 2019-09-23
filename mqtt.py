@@ -113,6 +113,9 @@ def on_message(client, userdata, msg):
         elif topic[0] == 'statistics':
             stats = json.loads(msg.payload.decode())
             logger.info("Stats call received: {}".format(stats))
+            # It just seems easier/faster to store the total paid aggregate in redis
+            if 'total_paid_banano' in stats:
+                r.set("bpowdash:totalpaidban", str(stats['total_paid_banano']))
             try:
                 db.set_services(stats['services']['public'])
 
