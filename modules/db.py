@@ -93,10 +93,12 @@ def create_tables():
         if not check_exists:
             sql = """
             CREATE TABLE `clients` (
-              `client_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-              `last_action` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-              `registered_ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-              PRIMARY KEY (`client_id`)
+            `client_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+            `precache` int(11) DEFAULT NULL,
+            `ondemand` int(11) DEFAULT NULL,
+            `last_action` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `registered_ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`client_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
             """
 

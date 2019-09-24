@@ -2,7 +2,7 @@
 {% block content %}
 <body>
 
-<div class="main-container container pt-4 pt-md-5">
+<div class="main-container container">
 <div class="status-div">
   <h2 class="overview-header">Overview</h2>
   <p id="status-indicator" class="status-indicator"></p>
@@ -99,7 +99,7 @@
             <div style="display:inline-block; text-align: center;">
                 <h1 style="display:inline;">
                     {% if total_distributed %}
-                      {{ "{0:,.2f}".format(total_distributed) }}
+                      {{ "{0:,.0f}".format(total_distributed) }}
                     {% else %}
                         0
                     {% endif %}
@@ -161,7 +161,7 @@
   </div>
 </div>
 
-<div class="container pt-4 pt-md-5">
+<div class="container">
     <div class="row">
         <!--TODO: Add total Banano paid out-->
         <!--<div class="col">
@@ -201,7 +201,7 @@
     </div>
 </div>
 
-<div class="container service-client-container pt-4 pt-md-5">
+<div class="container service-client-container">
     <div class="row">
         <div class="col">
         <div class="row-fluid"><h2>Services</h2></div>
@@ -216,10 +216,10 @@
                 <table>
                     <thead>
                       <tr>
-                        <th scope="col" style="text-align:middle;" class="pb-2">
+                        <th scope="col" style="text-align:middle;">
                           Name
                         </th>
-                        <th scope="col" style="text-align:center;" class="pb-2">
+                        <th scope="col" style="text-align:center;">
                           Total Requests
                         </th>
                       </tr>
@@ -228,26 +228,26 @@
                       {% for row in services_table %}
                       <tr class="service_tr">
                         {% if row[1] %}
-                          <td style="text-align: center;" class="py-2"><a href="http://{{row[1]}}"><u>{{row[0]}}</u></a></td>
+                          <td style="text-align: center;"><a href="http://{{row[1]}}"><u>{{row[0]}}</u></a></td>
                         {% else %}
-                          <td style="text-align: center;" class="py-2">{{row[0]}}</td>
+                          <td style="text-align: center;">{{row[0]}}</td>
                         {% endif %}
                         {% if row[2] %}
-                          <td style="text-align: center;" class="py-2">{{row[2]}}</td>
+                          <td style="text-align: center;">{{row[2]}}</td>
                         {% else %}
-                          <td style="text-align: center;" class="py-2">0</td>
+                          <td style="text-align: center;">0</td>
                         {% endif %}
                       </tr>
                       {% endfor %}
                       {% if unlisted_count == 1 %}
                         <tr>
-                          <td style="text-align: center;" class="py-2">1 Unlisted Service</td>
-                          <td style="text-align: center;" class="py-2">{{unlisted_pow}}</td>
+                          <td style="text-align: center;">1 Unlisted Service</td>
+                          <td style="text-align: center;">{{unlisted_pow}}</td>
                         </tr>
                       {% elif unlisted_count >1 %}
                         <tr>
-                          <td style="text-align: center;" class="py-2">{{unlisted_count}} Unlisted Services</td>
-                          <td style="text-align: center;" class="py-2">{{unlisted_pow}}</td>
+                          <td style="text-align: center;">{{unlisted_count}} Unlisted Services</td>
+                          <td style="text-align: center;">{{unlisted_pow}}</td>
                         </tr>
                       {% else %}
                       {% endif %}
@@ -272,16 +272,16 @@
                     <table style="overflow-wrap: break-word; max-width: 100%;">
                         <thead>
                             <tr>
-                            <th scope="col" style="text-align:center;" class="pb-2">
+                            <th scope="col" style="text-align:center;">
                                 Rank
                             </th>
-                            <th scope="col" style="text-align:center;" class="pb-2">
+                            <th scope="col" style="text-align:center;">
                                 Address
                             </th>
-                            <th scope="col" style="text-align:center;" class="pb-2">
+                            <th scope="col" style="text-align:center;">
                                 Precache Work
                             </th>
-                            <th scope="col" style="text-align:center;" class="pb-2">
+                            <th scope="col" style="text-align:center;">
                                 On Demand Work
                             </th>
                             </tr>
@@ -289,14 +289,14 @@
                         <tbody>
                         {% for row in clients_table %}
                         <tr class="client_tr">
-                            <td class="client_td py-2"><b>{{loop.index}}</b></td>
-                            <td style="text-align: center;" class="py-2"><a href="https://creeper.banano.cc/explorer/account/{{row[0]}}"><u>{{row[0][:7]}}...{{row[0][-5:]}}</u></a></td>
+                            <td class="client_td"><b>{{loop.index}}</b></td>
+                            <td style="text-align: center;"><a href="https://creeper.banano.cc/explorer/account/{{row[0]}}"><u>{{row[0][:7]}}...{{row[0][-5:]}}</u></a></td>
                             {% if row[1] %}
-                            <td class="client_td py-2">{{row[1]}}</td>
+                            <td class="client_td">{{row[1]}}</td>
                             {% else %}
-                            <td class="client_td py-2">0</td>
+                            <td class="client_td">0</td>
                             {% endif %}
-                            <td class="client_td py-2">{{row[2]}}</td>
+                            <td class="client_td">{{row[2]}}</td>
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -311,7 +311,7 @@
 </div>
 
 
-<div class="footer-text pt-4 pt-md-5">
+<div class="footer-text">
     <small>Developed by <strong>Andrew Mitchell.</strong><br>
       View my other projects at <a href="https://andrewgmitchell.com">andrewgmitchell.com</a><br><br>
       <div style="display: inline-block">

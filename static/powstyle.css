@@ -164,7 +164,7 @@ div.footer-text {
 }
 
 *:focus {
-  outline: none;
+  outline: none !important;
 }
 
 ::-webkit-scrollbar {
@@ -179,6 +179,10 @@ div.footer-text {
 }
 ::-webkit-scrollbar-thumb {
   background-color: var(--green);
+}
+
+.navbar-toggler {
+  color: var(--main-text);
 }
 
 .client-card {
@@ -344,6 +348,7 @@ span.dpow-good {
 
 .navbar-image {
   height: 100%;
+  max-height: 75px;
 }
 
 .navbar {

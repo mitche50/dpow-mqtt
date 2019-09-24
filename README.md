@@ -9,14 +9,14 @@ Requirements for this setup:
 
 `sudo apt update`
 
-`sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools python3-venv nginx redis-server`
+`sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools python3-venv nginx redis-server mysql-server libmysqlclient-dev`
 
 It's recommended to use a virtual environment to handle the python requirements.
 
 Steps:
 1. Activate the redis server: `sudo systemctl enable redis-server.service`
 2. Navigate to the dpow-mqtt directory
-3. Activate your virtual environment: `virtualenv venv`
+3. Activate your virtual environment: `virtualenv -p python3 venv`
 4. `source venv/bin/activate`
 5. run: `pip install -r requirements.txt`
 6. Copy the example services to the systemd directory:   
