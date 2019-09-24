@@ -351,6 +351,13 @@ span.dpow-good {
   max-height: 75px;
 }
 
+@media (max-width : 639px) {
+  .navbar-brand {
+    left: 15%;
+    padding-bottom: 5px;
+  }
+}
+
 .navbar {
   background-color: var(--card-header);
 }
