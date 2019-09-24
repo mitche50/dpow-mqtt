@@ -142,7 +142,7 @@ live_chart_call = "SELECT response_length FROM requests ORDER BY response_ts DES
 
 @app.route("/upcheck")
 def upcheck():
-    post_url = "https://dpow.nanocenter.org/upcheck"
+    post_url = "https://bpow.banano.cc/upcheck/"
     response = requests.get(post_url)
     if response.text != 'up':
         return 'Offline'
