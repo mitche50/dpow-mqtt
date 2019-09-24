@@ -138,8 +138,15 @@ def on_message(client, userdata, msg):
             try:
                 result = json.loads(msg.payload.decode())
                 address = topic[1]
-                precache = result['precache']
-                ondemand = result['ondemand']
+                if 'precache' in result:
+                    precache = result['precache']
+                else:
+                    precache = 0
+                if 'ondemand' in result:
+                    ondemand = result['ondemand']
+                else:
+                    ondemand = 0
+                    
                 client_call = ("INSERT INTO clients"
                                " (client_id, precache, ondemand)"
                                " VALUES (%s, %s, %s)"
