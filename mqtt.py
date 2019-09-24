@@ -146,7 +146,7 @@ def on_message(client, userdata, msg):
                     ondemand = result['ondemand']
                 else:
                     ondemand = 0
-                    
+
                 client_call = ("INSERT INTO clients"
                                " (client_id, precache, ondemand)"
                                " VALUES (%s, %s, %s)"
