@@ -75,6 +75,11 @@ th {
   height: 80%;
 }
 
+.sc-card-body {
+  height: 550px;
+  max-height: 550px;
+}
+
 .powtooltip {
     position: relative;
     display: inline-block;
@@ -361,3 +366,12 @@ span.dpow-good {
 .navbar {
   background-color: var(--card-header);
 }
+
+.pulse {
+  color: var(--main-text);
+  -webkit-transition:color 1s;
+  -moz-transition:color 1s;
+  -o-transition:color 1s;
+  transition:color 1s
+}
+

@@ -109,6 +109,8 @@ def on_message(client, userdata, msg):
             db.set_db_data(client_sql, [work_client, ])
             db.set_db_data(request_sql, [work_hash, work_client, work_type, work_value,
                                          work_difficulty, work_multiplier, time_difference])
+            
+            logger.info("result received for message: {}".format(message))
 
         elif topic[0] == 'statistics':
             stats = json.loads(msg.payload.decode())

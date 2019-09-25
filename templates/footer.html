@@ -30,6 +30,7 @@
 
 <script>
 $(document).ready(function() {
+  resize_to_fit('#pow_count', '#pow_count_body');
   var pagelength = 10;
   var service_pageIndex = 1;
   var client_pageIndex = 1;
@@ -234,9 +235,18 @@ for (let i = 25; i > 0; i--) {
   wsChart.update();
 }
 
+function resize_to_fit(x, y){
+    var fontsize = $(x).css('font-size');
+
+    if($(x).width() >= $(y).width()){
+        $(x).css('fontSize', parseFloat(fontsize) - 1);
+        resize_to_fit(x, y);
+    }
+}
+
 var work_map = new Map();
 
-var client = mqtt.connect('mqtts://client:client@dpow.nanocenter.org/mqtt/')
+var client = mqtt.connect('mqtts://client:client@bpow.banano.cc/mqtt/')
 client.on("connect", function () {
     console.log('MQTT connected')
 
@@ -252,7 +262,8 @@ function initMqtt(){
   // subscribe to all necessary channels
   client.subscribe([
     'work/#',
-    'client/#'
+    'client/#',
+    'statistics'
   ]);
 
   client.on("message", function (topic, payload) {
@@ -272,6 +283,10 @@ function initMqtt(){
       work_map.set(block_hash, timestamp);
     } else if (message_type == 'client') {
       var obj = JSON.parse(payload);
+      var client = topic_split[1];
+      var client_new_p = obj.precache;
+      var client_new_o = obj.ondemand;
+      
       var overall_pow = +$("#pow_count").text().split(',').join('');
       var pow_24hr = +$("#pow_24hr").text().split(',').join('');
 
@@ -298,12 +313,29 @@ function initMqtt(){
       overall_pow++;
       pow_24hr++;
 
+      if ($("#" + client + "-p").text() != client_new_p) {
+        $("#" + client + "-p").text(client_new_p);
+        $("#" + client + "-p").css("color","#87E086");
+        setTimeout(function() {
+          $("#" + client + "-p").css("color","#CFCED9");
+        }, 1000);
+      }
+
+      if ($("#" + client + "-o").text() != client_new_o) {
+        $("#" + client + "-o").text(client_new_o);
+        $("#" + client + "-o").css("color","#87E086");
+        setTimeout(function() {
+          $("#" + client + "-o").css("color","#CFCED9");
+        }, 1000);
+      }
+
       $("#pow_count").text(overall_pow.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
       if (pow_24hr >= 1) {
         $("#pow_24hr").text("+" + pow_24hr);
       } else {
         $("#pow_24hr").text(pow_24hr);
       }
+      resize_to_fit('#pow_count', '#pow_count_body');
 
       wsChart.data.datasets[0].data.push(second_diff)
 
@@ -314,6 +346,15 @@ function initMqtt(){
       wsChart.update();
 
       work_map.delete(block_hash);
+    } else if (message_type = 'statistics') {
+      var obj = JSON.parse(payload);
+      var services = obj.services.public;
+
+      for (var i = 0; i < services.length; i++ ) {
+        var total = services[i].precache + services[i].ondemand;
+        $("[id='" + services[i].display + "']").text(total.toString());
+      }
+      
     } else {
       console.log('unknown topic: ', topic, payload);
     }
