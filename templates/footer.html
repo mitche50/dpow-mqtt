@@ -286,6 +286,19 @@ function initMqtt(){
       var client = topic_split[1];
       var client_new_p = obj.precache;
       var client_new_o = obj.ondemand;
+      var service_name = undefined;
+
+      if ('service' in obj) {
+        service_name = obj.service;
+        var service_pow = +$("[id='" + service_name + "']").text();
+        service_pow++;
+        $("[id='" + service_name + "']").text(service_pow);
+        $("[id='" + service_name + "']").css("color","#87E086");
+        setTimeout(function() {
+          $("[id='" + service_name + "']").css("color","#CFCED9");
+        }, 1000);
+
+      }
       
       var overall_pow = +$("#pow_count").text().split(',').join('');
       var pow_24hr = +$("#pow_24hr").text().split(',').join('');
