@@ -261,12 +261,12 @@
                         <tr class="client_tr">
                             <td class="client_td py-2"><b>{{loop.index}}</b></td>
                             <td style="text-align: center;" class="py-2"><a href="https://creeper.banano.cc/explorer/account/{{row[0]}}"><u>{{row[0][:7]}}...{{row[0][-5:]}}</u></a></td>
-                            {% if row[1] %}
+                            {% if row[2] %}
                             <td class="client_td py-2 pulse" id="{{'{}-p'.format(row[0])}}">{{row[2]}}</td>
                             {% else %}
                             <td class="client_td py-2 pulse" id="{{'{}-p'.format(row[0])}}">0</td>
                             {% endif %}
-                            {% if row[2] %}
+                            {% if row[1] %}
                             <td class="client_td py-2 pulse" id="{{'{}-o'.format(row[0])}}">{{row[1]}}</td>
                             {% else %}
                             <td class="client_td py-2 pulse" id="{{'{}-o'.format(row[0])}}">0</td>
