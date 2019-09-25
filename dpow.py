@@ -234,13 +234,21 @@ def index():
     for row in avg_requests_hour:
         total_requests_hour += row[1]
         count_requests_hour += 1
-
-    requests_avg = int(total_requests / count_requests)
-    requests_avg_hour = int(total_requests_hour / count_requests_hour)
-    requests_avg_min = int(total_requests_min / count_requests_min)
+    if count_requests > 0:
+        requests_avg = int(total_requests / count_requests)
+    else:
+        requests_avg = 0
+    if count_requests_hour > 0:
+        requests_avg_hour = int(total_requests_hour / count_requests_hour)
+    else:
+        requests_avg_hour = 0
+    if count_requests_min:
+        requests_avg_min = int(total_requests_min / count_requests_min)
+    else:
+        requests_avg_min = 0
 
     if avg_overall_data[0][0] is not None:
-        avg_overall = round(float(avg_overall_data[0][0]), 1)
+        avg_overall = avg_overall_data[0][0]
     else:
         avg_overall = 0
 
