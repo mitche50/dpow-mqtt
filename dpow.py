@@ -51,7 +51,7 @@ work_24hr_call = ("SELECT (SELECT count(hash) FROM requests WHERE response_ts >=
 diff_24hr_call = ("SELECT round((SELECT avg(multiplier) FROM requests WHERE response_ts >= NOW() - INTERVAL 1 DAY) "
                   "- (SELECT avg(multiplier) FROM requests WHERE response_ts < NOW() - INTERVAL 1 DAY "
                   "   AND response_ts >= NOW() - INTERVAL 2 DAY),2)")
-services_call = ("SELECT service_name, service_website, (service_ondemand + service_precache) as pow "
+services_call = ("SELECT service_username, service_name, service_website, (service_ondemand + service_precache) as pow "
                  "FROM services "
                  "WHERE service_name != 'private' "
                  "ORDER BY pow DESC")

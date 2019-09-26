@@ -263,7 +263,7 @@ function initMqtt(){
   client.subscribe([
     'work/#',
     'client/#',
-    'statistics'
+    'service/#'
   ]);
 
   client.on("message", function (topic, payload) {
@@ -286,20 +286,7 @@ function initMqtt(){
       var client = topic_split[1];
       var client_new_p = obj.precache;
       var client_new_o = obj.ondemand;
-      var service_name = undefined;
-
-      if ('service' in obj) {
-        service_name = obj.service;
-        var service_pow = +$("[id='" + service_name + "']").text();
-        service_pow++;
-        $("[id='" + service_name + "']").text(service_pow);
-        $("[id='" + service_name + "']").css("color","#87E086");
-        setTimeout(function() {
-          $("[id='" + service_name + "']").css("color","#CFCED9");
-        }, 1000);
-
-      }
-      
+     
       var overall_pow = +$("#pow_count").text().split(',').join('');
       var pow_24hr = +$("#pow_24hr").text().split(',').join('');
 
@@ -359,14 +346,15 @@ function initMqtt(){
       wsChart.update();
 
       work_map.delete(block_hash);
-    } else if (message_type = 'statistics') {
-      var obj = JSON.parse(payload);
-      var services = obj.services.public;
-
-      for (var i = 0; i < services.length; i++ ) {
-        var total = services[i].precache + services[i].ondemand;
-        $("[id='" + services[i].display + "']").text(total.toString());
-      }
+    } else if (message_type = 'service') {
+      var service_name = topic_split[1];
+      var service_pow = +$("[id='" + service_name + "']").text();
+      service_pow++;
+      $("[id='" + service_name + "']").text(service_pow);
+      $("[id='" + service_name + "']").css("color","#87E086");
+      setTimeout(function() {
+        $("[id='" + service_name + "']").css("color","#CFCED9");
+      }, 1000);
       
     } else {
       console.log('unknown topic: ', topic, payload);

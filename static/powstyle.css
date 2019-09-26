@@ -375,3 +375,9 @@ span.dpow-good {
   transition:color 1s
 }
 
+.loadmore {
+  font-size:12px; 
+  color:grey; 
+  padding-left:15px; 
+  text-align:left;
+}

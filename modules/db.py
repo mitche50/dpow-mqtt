@@ -144,13 +144,14 @@ def create_tables():
         if not check_exists:
             sql = """
             CREATE TABLE `services` (
-              `service_name` varchar(100) NOT NULL,
-              `service_website` varchar(100) DEFAULT NULL,
-              `service_ondemand` int(11) DEFAULT NULL,
-              `service_precache` int(11) DEFAULT NULL,
-              `private_count` int(11) DEFAULT NULL,
-              `registered_ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-              PRIMARY KEY (`service_name`)
+            `service_username` varchar(100) NOT NULL DEFAULT ' ',
+            `service_name` varchar(100) NOT NULL,
+            `service_website` varchar(100) DEFAULT NULL,
+            `service_ondemand` int(11) DEFAULT NULL,
+            `service_precache` int(11) DEFAULT NULL,
+            `private_count` int(11) DEFAULT NULL,
+            `registered_ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`service_name`,`service_username`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
             """
 
@@ -236,17 +237,18 @@ def set_services(services):
     delete_services_call = "DELETE FROM services"
     set_db_data(delete_services_call, None)
 
-    create_row_call = ("INSERT INTO services (service_name, service_website, service_ondemand, service_precache) "
+    create_row_call = ("INSERT INTO services (service_username, service_name, service_website, service_ondemand, service_precache) "
                        "VALUES ")
     create_row_data = []
 
     try:
         for index, service in enumerate(services):
             if index == 0:
-                create_row_call = create_row_call + "(%s, %s, %s, %s)"
+                create_row_call = create_row_call + "(%s, %s, %s, %s, %s)"
             else:
-                create_row_call += " , (%s, %s, %s, %s)"
+                create_row_call += " , (%s, %s, %s, %s, %s)"
 
+            create_row_data.append(service['user_name'])
             create_row_data.append(service['display'])
             create_row_data.append(service['website'])
             create_row_data.append(service['ondemand'])
