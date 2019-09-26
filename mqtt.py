@@ -122,8 +122,8 @@ def on_message(client, userdata, msg):
                 db.set_services(stats['services']['public'])
 
                 private_call = ("INSERT INTO services"
-                                " (service_name, service_ondemand, service_precache, private_count)"
-                                " VALUES ('private', %s, %s, %s)"
+                                " (service_username, service_name, service_ondemand, service_precache, private_count)"
+                                " VALUES ('private', 'private', %s, %s, %s)"
                                 " ON DUPLICATE KEY UPDATE service_ondemand = VALUES(service_ondemand),"
                                 " service_precache = VALUES(service_precache),"
                                 " private_count = VALUES(private_count)")
