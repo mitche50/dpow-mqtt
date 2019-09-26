@@ -74,10 +74,6 @@ def on_message(client, userdata, msg):
             mapping = {'work_type': work_type, 'work_difficulty': work_difficulty, 'timestamp': str(datetime.now())}
             r.hmset(work_hash, mapping)
 
-            logger.info("{}: work topic received: Work type = {}, hash: {}, difficulty: {}".format(datetime.now(),
-                                                                                                   work_type,
-                                                                                                   work_hash,
-                                                                                                   work_difficulty))
         elif topic[0] == 'result':
             message = msg.payload.decode().split(',')
             work_hash = message[0]
@@ -110,7 +106,7 @@ def on_message(client, userdata, msg):
             db.set_db_data(request_sql, [work_hash, work_client, work_type, work_value,
                                          work_difficulty, work_multiplier, time_difference])
             
-            logger.info("result received for message: {}".format(message))
+            logger.info("{}: result received for message: {}".format(datetime.now(), message))
 
         elif topic[0] == 'statistics':
             stats = json.loads(msg.payload.decode())
