@@ -246,7 +246,7 @@ function resize_to_fit(x, y){
 
 var work_map = new Map();
 
-var client = mqtt.connect('mqtts://client:client@bpow.banano.cc/mqtt/')
+var client = mqtt.connect('mqtts://bpowinterface:TBAv6r9e6AKuXA9W@bpow.banano.cc/mqtt/')
 client.on("connect", function () {
     console.log('MQTT connected')
 
@@ -263,7 +263,8 @@ function initMqtt(){
   client.subscribe([
     'work/#',
     'client/#',
-    'service/#'
+    'service/#',
+    'result/#'
   ]);
 
   client.on("message", function (topic, payload) {
@@ -281,18 +282,15 @@ function initMqtt(){
 
       var block_hash = splits[0];
       work_map.set(block_hash, timestamp);
-    } else if (message_type == 'client') {
-      var obj = JSON.parse(payload);
-      var client = topic_split[1];
-      var client_new_p = obj.precache;
-      var client_new_o = obj.ondemand;
-     
+    } else if (message_type == 'result') {
+
+      var splits = payload.split(',');
+      var client = splits[1];
+      var block_hash = splits[0];
       var overall_pow = +$("#pow_count").text().split(',').join('');
       var pow_24hr = +$("#pow_24hr").text().split(',').join('');
 
-      var block_hash = obj.block_rewarded;
       if (!work_map.has(block_hash)) {
-        console.log('result without logging request: ' + block_hash);
         return;
       }
 
@@ -313,22 +311,6 @@ function initMqtt(){
       overall_pow++;
       pow_24hr++;
 
-      if ($("#" + client + "-p").text() != client_new_p) {
-        $("#" + client + "-p").text(client_new_p);
-        $("#" + client + "-p").css("color","#87E086");
-        setTimeout(function() {
-          $("#" + client + "-p").css("color","#CFCED9");
-        }, 1000);
-      }
-
-      if ($("#" + client + "-o").text() != client_new_o) {
-        $("#" + client + "-o").text(client_new_o);
-        $("#" + client + "-o").css("color","#87E086");
-        setTimeout(function() {
-          $("#" + client + "-o").css("color","#CFCED9");
-        }, 1000);
-      }
-
       $("#pow_count").text(overall_pow.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
       if (pow_24hr >= 1) {
         $("#pow_24hr").text("+" + pow_24hr);
@@ -346,6 +328,29 @@ function initMqtt(){
       wsChart.update();
 
       work_map.delete(block_hash);
+
+    } else if (message_type == 'client') {
+      var obj = JSON.parse(payload);
+      var client = topic_split[1];
+      var client_new_p = obj.precache;
+      var client_new_o = obj.ondemand;
+
+      if ($("#" + client + "-p").text() != client_new_p) {
+        $("#" + client + "-p").text(client_new_p);
+        $("#" + client + "-p").css("color","#87E086");
+        setTimeout(function() {
+          $("#" + client + "-p").css("color","#CFCED9");
+        }, 1000);
+      }
+
+      if ($("#" + client + "-o").text() != client_new_o) {
+        $("#" + client + "-o").text(client_new_o);
+        $("#" + client + "-o").css("color","#87E086");
+        setTimeout(function() {
+          $("#" + client + "-o").css("color","#CFCED9");
+        }, 1000);
+      }
+
     } else if (message_type = 'service') {
       var service_name = topic_split[1];
       var service_pow = +$("[id='" + service_name + "']").text();

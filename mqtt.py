@@ -62,11 +62,15 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
+    """
+    On messages from MQTT, handle the request.
+    """
     try:
         r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
         topic = msg.topic
         topic = topic.split('/')
         if topic[0] == 'work':
+            # We store the work request in a hashmap with the work hash as the key for reference when receiving the result.
             work_type = topic[1]
             message = msg.payload.decode().split(',')
             work_hash = message[0]
@@ -75,12 +79,17 @@ def on_message(client, userdata, msg):
             r.hmset(work_hash, mapping)
 
         elif topic[0] == 'result':
+            # When we receive the result, retrieve the hashmap associated with the work hash.
             message = msg.payload.decode().split(',')
             work_hash = message[0]
             work_value = message[1]
             work_client = message[2]
 
             hmreturn = r.hmget(work_hash, ['work_type', 'timestamp', 'work_difficulty'])
+
+            # Multiple results are sent for 1 work hash, ignore if the result has already been logged.
+            if hmreturn == [None, None, None]:
+                return
 
             work_type = hmreturn[0].decode()
             request_time = datetime.strptime(hmreturn[1].decode(), '%Y-%m-%d %H:%M:%S.%f')
@@ -93,11 +102,12 @@ def on_message(client, userdata, msg):
             else:
                 work_multiplier = "1"
 
+            # Get the time difference between the request and result, convert to a rounded number
             time_diff_micro = (datetime.now() - request_time).microseconds
             time_difference = round(time_diff_micro * (10 ** -6), 4)
 
+            # Update the DB and ignore if the work hash already exists in the DB.
             client_sql = "INSERT IGNORE INTO dpow_mqtt.clients SET client_id = %s"
-
             request_sql = ("INSERT IGNORE INTO requests "
                            "(hash, client, work_type, work_value, work_difficulty, multiplier, response_length) "
                            "VALUES (%s, %s, %s, %s, %s, %s, %s)")
@@ -107,6 +117,9 @@ def on_message(client, userdata, msg):
                                          work_difficulty, work_multiplier, time_difference])
             
             logger.info("{}: result received for message: {}".format(datetime.now(), message))
+
+            # Once logged successfully, delete the work hash from redis.
+            r.delete(work_hash)
 
         elif topic[0] == 'statistics':
             stats = json.loads(msg.payload.decode())
@@ -134,6 +147,8 @@ def on_message(client, userdata, msg):
 
         elif topic[0] == 'client':
             try:
+                # Messages on client update their totals without us having to track.  Keeps in sync 
+                # with the server.
                 result = json.loads(msg.payload.decode())
                 address = topic[1]
                 if 'precache' in result:

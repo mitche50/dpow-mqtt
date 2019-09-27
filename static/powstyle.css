@@ -381,3 +381,9 @@ span.dpow-good {
   padding-left:15px; 
   text-align:left;
 }
+
+@media (max-width : 639px) {
+  .livechart {
+    max-height: 200px;
+  }
+}
