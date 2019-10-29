@@ -143,11 +143,6 @@ def index():
     # Get info for Clients section
     clients_table = db.get_db_data(clients_call)
 
-    # Get info for POW charts
-    day_total = db.get_day_list()
-    hour_total = db.get_hour_list()
-    minute_total = db.get_minute_list()
-
     # POW charts from redis
     redis_minute_data, redis_minute_precache, redis_minute_ondemand = [], [], []
     redis_hour_data, redis_hour_precache, redis_hour_ondemand = [], [], []
