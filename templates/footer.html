@@ -12,10 +12,10 @@
                 url: '/upcheck',
                 success: function (data) {
                     if (data == 'up') {
-                        $('#status-indicator').html('Status: <span class="dpow-good">Online</span>');
+                      $('#status-indicator').html('<span class="status-ok status-button">Status: Online</a>');
                     }
                     else {
-                        $('#status-indicator').html('Status: <span class="dpow-bad">Offline</span>');
+                        $('#status-indicator').html('<span class="status-down status-button">Status: Offline</a>');
                     }
                 },
                 complete: function (data) {

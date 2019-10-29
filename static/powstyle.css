@@ -1,3 +1,58 @@
+:root{
+  --main-background: #212124;
+  --card-header: #2C2C30;
+  --green: #87E086;
+  --yellow: #FFEC6A;
+  --blue: #4A90E2;
+  --blue1: #0269e0;
+  --blue3: #639de0;
+  --blue4: #90b5e0;
+  --orange: #FFA86A;
+  --red: #FF6A6A;
+  --main-text: #CFCED9;
+  --graph-main: #939399;
+  --graph-bg: #3B3B3D;
+}
+
+@font-face{
+  font-family: Metropolis;
+  src: url('Metropolis-Regular.otf');
+}
+
+@font-face{
+  font-family: Metropolis-Medium;
+  src: url('Metropolis-Medium.otf');
+}
+
+@font-face{
+  font-family: Metropolis-Bold;
+  src: url('Metropolis-Bold.otf');
+}
+
+@font-face{
+  font-family: Metropolis-Semibold;
+  src: url('Metropolis-SemiBold.otf');
+}
+
+body {
+  font-family: 'Metropolis-Semibold';
+  font-size: 14pt;
+  color: var(--main-text);
+  background-color: var(--main-background);
+}
+
+.navbar {
+  background-color: var(--card-header);
+}
+
+.card {
+  background-color: var(--card-header);
+}
+
+.jumbotron {
+  background-color: var(--card-header);
+}
+
 .powtooltip {
     position: relative;
     display: inline-block;
@@ -7,20 +62,29 @@
 }
 
 .powtooltip .powtooltiptext {
-    visibility: hidden;
-    width: 200px;
-    padding: 15px;
-    background-color: black;
-    color: white;
-    opacity: .9;
-    margin-right: 5px;
-    text-align: center;
-    border-radius: 4px;
-    position: absolute;
+  visibility: hidden;
+  width: 200px;
+  padding: 15px;
+  background-color: var(--main-background);
+  color: var(--main-text);
+  opacity: .9;
+  margin-right: 5px;
+  text-align: center;
+  border-radius: 4px;
+  position: absolute;
 
-    /* Position the tooltip */
-    top: -5px;
-    right: 105%;
+  /* Position the tooltip */
+  top: -5px;
+  right: 105%;
+}
+
+a {
+  color: var(--blue);
+}
+
+a:hover {
+  filter:brightness(80%);
+  color: var(--blue) !important;
 }
 
 .powtooltip:hover .powtooltiptext {
@@ -34,7 +98,6 @@
 
 .avgPowButton {
   font-size: 12px;
-  outline: #4691E3;
   -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
@@ -46,17 +109,10 @@
   margin: 2px;
   border-radius: 10px;
   display: inline-block;
-  color: grey;
-  background-color: white;
-}
-
-.avgPowButton:hover {
-  box-shadow: 2px 5px 10px -5px #4691E3;
 }
 
 .avgPowButtonActive {
   font-size: 12px;
-  outline: #4691E3;
   -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
@@ -68,10 +124,97 @@
   margin: 2px;
   border-radius: 10px;
   display: inline-block;
-  color: grey;
-  background-color: #4691E3;
-  color: white;
-  opacity: .8;
+  color: var(--card-header);
+  background-color: var(--blue);
+}
+
+tbody tr:nth-child(odd) {
+  background-color: var(--graph-bg);
+}
+
+tbody tr {
+  font-family: "Metropolis";
+  font-size: 12pt;
+}
+
+.loadmore {
+  font-size:12px; 
+  color: var(--graph-main); 
+  padding-left:15px; 
+  text-align:left;
+}
+
+th {
+  font-family: 'Metropolis-SemiBold';
+  font-size: 12pt;
+}
+
+#status-indicator {
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  position: relative; 
+  overflow-wrap: break-word; 
+  max-width: 100%;
+}
+
+td a {
+  text-decoration: none;
+}
+
+.status-indicator {
+  display: inline-block;
+  padding-left: 6px;
+  transform: translateY(-30%);
+}
+
+.overview-header {
+  display: inline-block;
+  font-family: 'Metropolis-Bold';
+  size: 30pt;
+}
+
+.status-ok {
+  background-color: var(--blue);
+}
+
+.status-down {
+  background-color: var(--red);
+}
+
+.status-button:hover {
+  cursor: inherit;
+  color: var(--main-background);
+}
+
+.status-button:active {
+  border: none !important;
+  border-radius: 6px !important;
+  border-color: var(--main-background) !important;
+}
+
+.status-button {
+  padding-left: 5px;
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard syntax */
+  border: none;
+  border-radius: 6px;
+  color: var(--main-background) !important;
+  padding: 2px 6px 4px 6px;
+  font-size: 10pt;
+}
+
+.donate-nano-button {
+  border: none;
+  border-radius: 6px;
+  color: var(--main-background) !important;
+  background-color: var(--blue);
+  padding: 4px 6px 4px 6px;
+  font-size: 10pt;
 }
 
 div.footer-text {
@@ -84,16 +227,12 @@ div.footer-text {
   overflow-x: auto;
 }
 
-#status-indicator {
-  text-align: center;
-}
-
 span.dpow-bad {
-  color: #E24A4A;
+  color: var(--red);
 }
 
 p.dpow-good {
-  color:#32CD32;
+  color: var(--green);
   font-size:10px;
   display:inline;
 }
@@ -121,4 +260,30 @@ span.dpow-good {
 
 .client_td {
   text-align: center;
+}
+
+.client-card-header {
+  width: 100%;
+  height: 8px;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.card-one {
+  background-color: var(--blue1);
+}
+
+.card-two {
+  background-color: var(--blue);
+}
+
+.card-three {
+  background-color: var(--blue3);
+}
+
+.card-four {
+  background-color: var(--blue4);
 }

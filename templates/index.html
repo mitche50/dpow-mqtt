@@ -1,11 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script>
+$( document ).ready(function() {
+  console.log( "ready!" );
+  });
+</script>
 <body>
-<p id="status-indicator"></p>
-<div class="container">
-<h2>Overview</h2>
+  <div class="main-container container pt-4 pt-md-5">
+    <div class="status-div">
+      <h2 class="overview-header">Overview</h2>
+      <p id="status-indicator" class="status-indicator"></p>
+    </div>
 <div class="card-deck mb-3 text-center">
   <div class="card mb-4 shadow-sm">
+      <div class="client-card-header card-one"></div>
       <div class="card-body">
         <div style="display:inline-block">
             <p class="card-text">Clients Connected</p>
@@ -31,6 +40,7 @@
       </div>
     </div>
     <div class="card mb-4 shadow-sm">
+        <div class="client-card-header card-two"></div>
         <div class="card-body">
         <div style="display:inline-block">
             <p class="card-text">Registered Services</p>
@@ -59,6 +69,7 @@
         </div>
     </div>
     <div class="card mb-4 shadow-sm">
+        <div class="client-card-header card-three"></div>
         <div class="card-body">
         <div style="display:inline-block">
             <p class="card-text">Requests in Past 24 Hours</p>
@@ -83,6 +94,7 @@
           </div>
         </div>
     <div class="card mb-4 shadow-sm">
+        <div class="client-card-header card-four"></div>
         <div class="card-body">
             <div style="display:inline-block">
                 <p class="card-text">Average Difficulty</p>
@@ -200,21 +212,21 @@
     <div class="row">
         <div class="col">
         <div class="row-fluid"><h2>Services</h2></div>
-        <div class="row-fluid">
-            <div class="card-deck mb-4 text-center">
+        <div class="row-fluid cs-row">
+            <div class="card-deck mb-4 text-center cs-card">
           <div class="card mb-4 shadow-sm">
-              <div class="card-body">
+              <div class="card-body sc-card-body">
                 <div class="powtooltip" style="padding-bottom:20px;">
                     <i class="far fa-question-circle"  ></i>
                     <span class="powtooltiptext">A list of Services utilizing the DPoW Network.  If a website is provided, clicking on the Service name will send you to their home page.</span>
                 </div>
-                <table class="table table-sm table-striped" style="overflow-wrap: break-word; max-width: 100%;">
+                <table>
                     <thead>
                       <tr>
-                        <th scope="col" style="text-align:middle;">
+                        <th scope="col" style="text-align:middle;" class="pb-2">
                           Name
                         </th>
-                        <th scope="col" style="text-align:center;">
+                        <th scope="col" style="text-align:center;" class="pb-2">
                           Total Requests
                         </th>
                       </tr>
@@ -223,32 +235,32 @@
                       {% for row in services_table %}
                       <tr class="service_tr">
                         {% if row[1] %}
-                          <td style="text-align: center;"><a href="http://{{row[1]}}"><u>{{row[0]}}</u></a></td>
+                          <td class="pulse py-2"><a href="http://{{row[1]}}"><u>{{row[0]}}</u></a></td>
                         {% else %}
-                          <td style="text-align: center;">{{row[0]}}</td>
+                          <td class="pulse py-2">{{row[0]}}</td>
                         {% endif %}
                         {% if row[2] %}
-                          <td style="text-align: center;">{{row[2]}}</td>
+                          <td class="pulse py-2">{{row[2]}}</td>
                         {% else %}
-                          <td style="text-align: center;">0</td>
+                          <td class="pulse py-2">0</td>
                         {% endif %}
                       </tr>
                       {% endfor %}
                       {% if unlisted_count == 1 %}
                         <tr>
-                          <td style="text-align: center;">1 Unlisted Service</td>
-                          <td style="text-align: center;">{{unlisted_pow}}</td>
+                          <td class="py-2">1 Unlisted Service</td>
+                          <td class="py-2">{{unlisted_pow}}</td>
                         </tr>
                       {% elif unlisted_count >1 %}
                         <tr>
-                          <td style="text-align: center;">{{unlisted_count}} Unlisted Services</td>
-                          <td style="text-align: center;">{{unlisted_pow}}</td>
+                          <td class="py-2">{{unlisted_count}} Unlisted Services</td>
+                          <td class="py-2">{{unlisted_pow}}</td>
                         </tr>
                       {% else %}
                       {% endif %}
                     </tbody>
                 </table>
-                <p style="font-size:12px; color:grey; padding-left:15px; text-align:left;" id="loadMoreServices">Load More ...</p>
+                <p class="loadmore" id="loadMoreServices">Load More ...</p>
               </div>
             </div>
         </div>
@@ -256,7 +268,7 @@
         </div>
         <div class="col">
         <div class="row-fluid"><h2>Clients</h2></div>
-            <div class="row-fluid">
+            <div class="row-fluid cs-row">
                 <div class="card-deck mb-4 text-center">
                 <div class="card mb-4 shadow-sm">
                   <div class="card-body client-card">
@@ -264,7 +276,7 @@
                       <i class="far fa-question-circle"></i>
                       <span class="powtooltiptext">A ranked list of payout addresses for clients providing work.  Clicking on the address will take you to Nano Crawler to see the payouts provided.</span>
                     </div>
-                    <table class="table table-sm table-striped" style="overflow-wrap: break-word; max-width: 100%;">
+                    <table>
                         <thead>
                             <tr>
                             <th scope="col" style="text-align:center;">
@@ -296,7 +308,7 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                    <p style="font-size:12px; color:grey; padding-left:15px; text-align:left;" id="loadMoreClients">Load More ...</p>
+                    <p class="loadmore" id="loadMoreClients">Load More ...</p>
                   </div>
                 </div>
             </div>
@@ -307,11 +319,16 @@
 
 
 <div class="footer-text">
-    <small>Developed by Andrew Mitchell.  View my other projects at <a href="https://andrewgmitchell.com">andrewgmitchell.com</a><br>
-    If you would like to donate directly to me for the Dashboard, you can send Nano using <a href="https://nanote.net/pay/758b6c10-89fc-11e8-8cbe-b1db379191f2">this link</a></small>
+    <small>Developed by <strong>Andrew Mitchell.</strong><br>
+      View my other projects at <a href="https://andrewgmitchell.com">andrewgmitchell.com</a><br><br>
+      <div style="display: inline-block">
+          <a class="donate-link" href="https://nanote.net/pay/758b6c10-89fc-11e8-8cbe-b1db379191f2"><div class="donate-nano-button">Donate <strong>NANO</strong></div></a>
+      </div>
+      <br><br>
+    <!--If you would like to donate directly to me for the Dashboard, you can send Banano to <a href="ban:ban_1kyxbsqfbc4fpydp5355dznrhhjts1tskgtykicsshwd769owjei17nmgsx3">ban_1kyxbsqfbc4fpydp5355dznrhhjts1tskgtykicsshwd769owjei17nmgsx3</a>-->
 </div>
 </body>
-<script>
+  <script>
     var pow_ctx = document.getElementById("powPerMinute");
     var avg_ctx = document.getElementById("avgPow");
     var timeFormat = 'YYYY-MM-DD HH:mm'
