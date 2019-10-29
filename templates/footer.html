@@ -277,6 +277,8 @@ function initMqtt(){
     var date = new Date();
     var timestamp = date.getTime();
 
+    console.log("message type: ", message_type);
+
     if (message_type == 'work') {
       var splits = payload.split(',');
 
@@ -355,6 +357,7 @@ function initMqtt(){
       var service_name = topic_split[1];
       var service_pow = +$("[id='" + service_name + "']").text();
       service_pow++;
+      console.log("service_name: ", service_name);
       $("[id='" + service_name + "']").text(service_pow);
       $("[id='" + service_name + "']").css("color","#87E086");
       setTimeout(function() {

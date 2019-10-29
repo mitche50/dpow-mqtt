@@ -216,24 +216,24 @@ def index():
     redis_avg_data, redis_avg_precache, redis_avg_ondemand = [], [], []
 
     for i in range(0, redisInst.llen("bpow_minute_data")):
-        redis_minute_data.append(json.loads(redisInst.lindex("bpow_minute_data", i).decode('utf-8')))
-        redis_minute_ondemand.append(json.loads(redisInst.lindex("bpow_minute_ondemand", i).decode('utf-8')))
-        redis_minute_precache.append(json.loads(redisInst.lindex("bpow_minute_precache", i).decode('utf-8')))
+        redis_minute_data.append(json.loads(redisInst.lindex("bpow_minute_data", i)))
+        redis_minute_ondemand.append(json.loads(redisInst.lindex("bpow_minute_ondemand", i)))
+        redis_minute_precache.append(json.loads(redisInst.lindex("bpow_minute_precache", i)))
     
     for i in range(0, redisInst.llen("bpow_day_data")):
-        redis_day_data.append(json.loads(redisInst.lindex("bpow_day_data", i).decode('utf-8')))
-        redis_day_ondemand.append(json.loads(redisInst.lindex("bpow_day_ondemand", i).decode('utf-8')))
-        redis_day_precache.append(json.loads(redisInst.lindex("bpow_day_precache", i).decode('utf-8')))
+        redis_day_data.append(json.loads(redisInst.lindex("bpow_day_data", i)))
+        redis_day_ondemand.append(json.loads(redisInst.lindex("bpow_day_ondemand", i)))
+        redis_day_precache.append(json.loads(redisInst.lindex("bpow_day_precache", i)))
     
     for i in range(0, redisInst.llen("bpow_hour_data")):
-        redis_hour_data.append(json.loads(redisInst.lindex("bpow_hour_data", i).decode('utf-8')))
-        redis_hour_ondemand.append(json.loads(redisInst.lindex("bpow_hour_ondemand", i).decode('utf-8')))
-        redis_hour_precache.append(json.loads(redisInst.lindex("bpow_hour_precache", i).decode('utf-8')))
+        redis_hour_data.append(json.loads(redisInst.lindex("bpow_hour_data", i)))
+        redis_hour_ondemand.append(json.loads(redisInst.lindex("bpow_hour_ondemand", i)))
+        redis_hour_precache.append(json.loads(redisInst.lindex("bpow_hour_precache", i)))
 
     for i in range(0, redisInst.llen("bpow_avg_data")):
-        redis_avg_data.append(json.loads(redisInst.lindex("bpow_avg_data", i).decode('utf-8')))
-        redis_avg_ondemand.append(json.loads(redisInst.lindex("bpow_avg_ondemand", i).decode('utf-8')))
-        redis_avg_precache.append(json.loads(redisInst.lindex("bpow_avg_precache", i).decode('utf-8')))
+        redis_avg_data.append(json.loads(redisInst.lindex("bpow_avg_data", i)))
+        redis_avg_ondemand.append(json.loads(redisInst.lindex("bpow_avg_ondemand", i)))
+        redis_avg_precache.append(json.loads(redisInst.lindex("bpow_avg_precache", i)))
 
     avg_overall_data = db.get_db_data(avg_overall_call)
     avg_requests_data = db.get_db_data(avg_requests_call)
