@@ -5,6 +5,7 @@ from logging.handlers import TimedRotatingFileHandler
 import json
 import logging
 import os
+import redis
 import requests
 
 import modules.db as db
@@ -19,6 +20,8 @@ handler = TimedRotatingFileHandler('{}/logs/{:%Y-%m-%d}-flask.log'.format(os.get
 logger.addHandler(handler)
 
 app = Flask(__name__)
+
+r = redis.Redis('localhost')
 
 pow_count_call = "SELECT count(hash) FROM requests WHERE response_ts >= NOW() - INTERVAL 24 HOUR;"
 pow_ratio_call = ("SELECT work_type, count(work_type) FROM requests"
@@ -54,57 +57,7 @@ avg_requests_min_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H:%i'), cou
 avg_requests_hour_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H'), count(hash) FROM requests "
                           "WHERE response_ts >= NOW() - INTERVAL 24 hour "
                           "GROUP BY date_format(response_ts, '%Y-%m-%d %H');")
-pow_day_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
-                      "FROM "
-                      "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as overall "
-                      " FROM requests "
-                      " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t1 "
-                      "left join "
-                      "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as precache "
-                      " FROM requests "
-                      " WHERE work_type = 'precache' "
-                      " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t2 "
-                      " on t1.ts = t2.ts "
-                      " left join "
-                      " (SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as ondemand "
-                      " FROM requests  "
-                      " WHERE work_type = 'ondemand' "
-                      " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t3 "
-                      " on t1.ts = t3.ts ORDER BY ts ASC;")
-pow_hour_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
-                       "FROM "
-                       "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as overall "
-                       " FROM requests "
-                       " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t1 "
-                       "left join "
-                       "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as precache "
-                       " FROM requests "
-                       " WHERE work_type = 'precache' "
-                       " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t2 "
-                       " on t1.ts = t2.ts "
-                       " left join "
-                       " (SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as ondemand "
-                       " FROM requests  "
-                       " WHERE work_type = 'ondemand' "
-                       " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t3 "
-                       " on t1.ts = t3.ts ORDER BY ts ASC;")
-pow_minute_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
-                         "FROM "
-                         "(SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as overall "
-                         " FROM requests "
-                         " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t1 "
-                         "left join "
-                         "(SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as precache "
-                         " FROM requests "
-                         " WHERE work_type = 'precache' "
-                         " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t2 "
-                         " on t1.ts = t2.ts "
-                         " left join "
-                         " (SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as ondemand "
-                         " FROM requests  "
-                         " WHERE work_type = 'ondemand' "
-                         " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t3 "
-                         " on t1.ts = t3.ts ORDER BY ts ASC;")
+
 avg_combined_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
                      "FROM "
                      "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, avg(response_length) as overall "
@@ -191,9 +144,29 @@ def index():
     clients_table = db.get_db_data(clients_call)
 
     # Get info for POW charts
-    day_total = db.get_db_data(pow_day_total_call)
-    hour_total = db.get_db_data(pow_hour_total_call)
-    minute_total = db.get_db_data(pow_minute_total_call)
+    day_total = db.get_day_list()
+    hour_total = db.get_hour_list()
+    minute_total = db.get_minute_list()
+
+    # POW charts from redis
+    redis_minute_data, redis_minute_precache, redis_minute_ondemand = [], [], []
+    redis_hour_data, redis_hour_precache, redis_hour_ondemand = [], [], []
+    redis_day_data, redis_day_precache, redis_day_ondemand = [], [], []
+
+    for i in range(0, r.llen("minute_data")):
+        redis_minute_data.append(json.loads(r.lindex("minute_data", i)))
+        redis_minute_ondemand.append(json.loads(r.lindex("minute_ondemand", i)))
+        redis_minute_precache.append(json.loads(r.lindex("minute_precache", i)))
+    
+    for i in range(0, r.llen("day_data")):
+        redis_day_data.append(json.loads(r.lindex("day_data", i)))
+        redis_day_ondemand.append(json.loads(r.lindex("day_ondemand", i)))
+        redis_day_precache.append(json.loads(r.lindex("day_precache", i)))
+    
+    for i in range(0, r.llen("hour_data")):
+        redis_hour_data.append(json.loads(r.lindex("hour_data", i)))
+        redis_hour_ondemand.append(json.loads(r.lindex("hour_ondemand", i)))
+        redis_hour_precache.append(json.loads(r.lindex("hour_precache", i)))
 
     avg_combined_time = db.get_db_data(avg_combined_call)
     avg_overall_data = db.get_db_data(avg_overall_call)
@@ -222,9 +195,18 @@ def index():
         total_requests_hour += row[1]
         count_requests_hour += 1
 
-    requests_avg = int(total_requests / count_requests)
-    requests_avg_hour = int(total_requests_hour / count_requests_hour)
-    requests_avg_min = int(total_requests_min / count_requests_min)
+    if count_requests > 0:
+        requests_avg = int(total_requests / count_requests)
+    else:
+        requests_avg = 0
+    if count_requests_hour > 0:
+        requests_avg_hour = int(total_requests_hour / count_requests_hour)
+    else:
+        requests_avg_hour = 0
+    if count_requests_min > 0:
+        requests_avg_min = int(total_requests_min / count_requests_min)
+    else:
+        requests_avg_min = 0
 
     if avg_overall_data[0][0] is not None:
         avg_overall = round(float(avg_overall_data[0][0]), 1)
@@ -241,11 +223,13 @@ def index():
                            precache_ratio=precache_ratio, service_count=service_count, client_count=client_count,
                            listed_services=listed_services, unlisted_services=unlisted_services, work_24hr=work_24hr,
                            services_table=services_table, unlisted_count=unlisted_count, unlisted_pow=unlisted_pow,
-                           clients_table=clients_table, day_total=day_total, hour_total=hour_total,
-                           minute_total=minute_total, avg_overall=avg_overall, avg_combined_time=avg_combined_time,
+                           clients_table=clients_table, avg_overall=avg_overall, avg_combined_time=avg_combined_time,
                            avg_difficulty=avg_difficulty, requests_avg=requests_avg,
                            live_chart_prefill=live_chart_prefill, requests_avg_hour=requests_avg_hour,
-                           requests_avg_min=requests_avg_min)
+                           requests_avg_min=requests_avg_min, 
+                           minute_data=redis_minute_data, minute_precache=redis_minute_precache, minute_ondemand=redis_minute_ondemand,
+                           hour_data=redis_hour_data, hour_precache=redis_hour_precache, hour_ondemand=redis_hour_ondemand,
+                           day_data=redis_day_data, day_precache=redis_day_precache, day_ondemand=redis_day_ondemand)
 
 
 if __name__ == "__main__":

@@ -9,14 +9,14 @@ Requirements for this setup:
 
 `sudo apt update`
 
-`sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools python3-venv nginx redis-server`
+`sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools python3-venv nginx redis-server mysql-server libmysqlclient-dev`
 
 It's recommended to use a virtual environment to handle the python requirements.
 
 Steps:
 1. Activate the redis server: `sudo systemctl enable redis-server.service`
 2. Navigate to the dpow-mqtt directory
-3. Activate your virtual environment: `virtualenv venv`
+3. Activate your virtual environment: `virtualenv -p python3 venv`
 4. `source venv/bin/activate`
 5. run: `pip install -r requirements.txt`
 6. Copy the example services to the systemd directory:   
@@ -52,11 +52,12 @@ server {
 &nbsp;&nbsp;5\. If no errors: `sudo systemctl restart nginx`<br/>
 &nbsp;&nbsp;6\. Ensure that Nginx is allowed: `sudo ufw allow 'Nginx Full'`
 
-The final step is to set up a cron job to run the log updates every 24 hours.  This gives 
+The final step is to set up cron jobs to run the log updates every 24 hours and update the cache every minute.  This gives 
 the client_log and service_log their information to generate the change over 24 hours.
 1. Ensure the log_update.sh file is executable: `sudo chmod +x log_update.sh`
 2. Run `sudo crontab -e` and select whatever editor you're comfortable with.
 3. Insert the following line at the end of the file: `0 2 * * * {YOUR_USERNAME} /path/to/dpow-mqtt/log_update.sh`
+4. Insert the following line at the end of the file: `* * * * * {YOUR_USERNAME} cd /path/to/dpow-mqtt && /path/to/dpow-mqtt/venv/bin/python3.7 /path/to/dpow-mqtt/cache.py >> /var/log/dpow-mqtt/cron.log 2>&1`
 4. Update log_update.sh to direct to the correct path of config.ini: `/path/to/dpow-mqtt/config.ini`
 
 You should now be able to navigate to `http://{YOUR_DOMAIN}` to access the dashboard.

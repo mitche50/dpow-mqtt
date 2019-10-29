@@ -94,6 +94,8 @@ def create_tables():
             sql = """
             CREATE TABLE `clients` (
               `client_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+              `precache` int(11) DEFAULT NULL,
+              `ondemand` int(11) DEFAULT NULL,
               `last_action` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
               `registered_ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
               PRIMARY KEY (`client_id`)
@@ -260,3 +262,68 @@ def set_services(services):
         raise e
 
     logger.info("Services entered into DB.")
+
+
+def get_day_list():
+    pow_day_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
+                            "FROM "
+                            "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as overall "
+                            " FROM requests "
+                            " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t1 "
+                            "left join "
+                            "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as precache "
+                            " FROM requests "
+                            " WHERE work_type = 'precache' "
+                            " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t2 "
+                            " on t1.ts = t2.ts "
+                            " left join "
+                            " (SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as ondemand "
+                            " FROM requests  "
+                            " WHERE work_type = 'ondemand' "
+                            " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t3 "
+                            " on t1.ts = t3.ts ORDER BY ts ASC;")
+    pow_day_data = get_db_data(pow_day_total_call)
+    return pow_day_data
+
+
+def get_hour_list():
+    pow_hour_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
+                            "FROM "
+                            "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as overall "
+                            " FROM requests "
+                            " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t1 "
+                            "left join "
+                            "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as precache "
+                            " FROM requests "
+                            " WHERE work_type = 'precache' "
+                            " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t2 "
+                            " on t1.ts = t2.ts "
+                            " left join "
+                            " (SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as ondemand "
+                            " FROM requests  "
+                            " WHERE work_type = 'ondemand' "
+                            " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t3 "
+                            " on t1.ts = t3.ts ORDER BY ts ASC;")
+    hour_data = get_db_data(pow_hour_total_call)
+    return hour_data
+
+def get_minute_list():
+    pow_minute_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
+                            "FROM "
+                            "(SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as overall "
+                            "FROM requests "
+                            "WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t1 "
+                            "left join "
+                            "(SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as precache "
+                             "FROM requests "
+                             "WHERE work_type = 'precache' "
+                             "AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t2 "
+                             "on t1.ts = t2.ts "
+                             "left join "
+                             "(SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as ondemand "
+                             "FROM requests "
+                             "WHERE work_type = 'ondemand' "
+                             "AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t3 "
+                             "on t1.ts = t3.ts ORDER BY ts ASC;")
+    minute_data = get_db_data(pow_minute_total_call)
+    return minute_data

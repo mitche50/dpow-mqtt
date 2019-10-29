@@ -335,47 +335,17 @@
     var avg_ondemand_time = [];
     var combined_time = [];
 
-    {% for row in hour_total %}
-        hour_data = hour_data.concat([{x: "{{row[0]}}", y: {{row[1]}}}]);
-        {% if row[2] != None %}
-            hour_precache_table = hour_precache_table.concat([{x: "{{row[0]}}", y: {{row[2]}}}]);
-        {% else %}
-            hour_precache_table = hour_precache_table.concat([{x: "{{row[0]}}", y: 0}]);
-        {% endif %}
-        {% if row[3] != None %}
-            hour_ondemand_table = hour_ondemand_table.concat([{x: "{{row[0]}}", y: {{row[3]}}}]);
-        {% else %}
-            hour_ondemand_table = hour_ondemand_table.concat([{x: "{{row[0]}}", y: 0}]);
-        {% endif %}
-    {% endfor %}
+    minute_data = {{ minute_data|safe }};
+    minute_precache_table = {{ minute_precache|safe }}
+    minute_ondemand_table = {{ minute_ondemand|safe }}
 
-    {% for row in minute_total %}
-        minute_data = minute_data.concat([{x: "{{row[0]}}", y: {{row[1]}}}]);
-        {% if row[2] != None %}
-            minute_precache_table = minute_precache_table.concat([{x: "{{row[0]}}", y: {{row[2]}}}]);
-        {% else %}
-            minute_precache_table = minute_precache_table.concat([{x: "{{row[0]}}", y: 0}]);
-        {% endif %}
-        {% if row[3] != None %}
-            minute_ondemand_table = minute_ondemand_table.concat([{x: "{{row[0]}}", y: {{row[3]}}}]);
-        {% else %}
-            minute_ondemand_table = minute_ondemand_table.concat([{x: "{{row[0]}}", y: 0}]);
-        {% endif %}
-    {% endfor %}
+    hour_data = {{ hour_data|safe }};
+    hour_precache_table = {{ hour_precache|safe }}
+    hour_ondemand_table = {{ hour_ondemand|safe }}
 
-    {% for row in day_total %}
-        day_data = day_data.concat([{x: "{{row[0]}}", y: {{row[1]}}}]);
-        {% if row[2] != None %}
-            day_precache_table = day_precache_table.concat([{x: "{{row[0]}}", y: {{row[2]}}}]);
-        {% else %}
-            day_precache_table = day_precache_table.concat([{x: "{{row[0]}}", y: 0}]);
-        {% endif %}
-        {% if row[3] != None %}
-            day_ondemand_table = day_ondemand_table.concat([{x: "{{row[0]}}", y: {{row[3]}}}]);
-        {% else %}
-            day_ondemand_table = day_ondemand_table.concat([{x: "{{row[0]}}", y: 0}]);
-        {% endif %}
-    {% endfor %}
+    day_data = {{ day_data|safe }};
+    day_precache_table = {{ day_precache|safe }}
+    day_ondemand_table = {{ day_ondemand|safe }}
 
     {% for row in avg_combined_time %}
         combined_time = combined_time.concat([{x: "{{row[0]}}", y: {{row[1]}}}]);
@@ -396,6 +366,7 @@
     var avg_ondemand_table = hour_ondemand_table;
     var avgPowChart = new Chart(pow_ctx, {
         type: 'line',
+        dataType: 'json',
         data:{
         datasets: [{
             label: 'Total',
