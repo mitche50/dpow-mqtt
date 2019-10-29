@@ -42,7 +42,7 @@ def populate_chart(data_dict, chart_name):
     r.delete("bpow_{}_precache".format(chart_name))
     r.delete("bpow_{}_ondemand".format(chart_name))
     for data in data_dict:
-        r.lpush("bpow_{}_data".format(chart_name), json.dumps({"x": data[0], "y": float(data[1]})))
+        r.lpush("bpow_{}_data".format(chart_name), json.dumps({"x": data[0], "y": data[1]}))
         if data[2] is not None:
             r.lpush("bpow_{}_precache".format(chart_name), json.dumps({"x": data[0], "y": data[2]}))
         else:
