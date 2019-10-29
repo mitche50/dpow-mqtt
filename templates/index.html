@@ -347,6 +347,10 @@
     day_precache_table = {{ day_precache|safe }}
     day_ondemand_table = {{ day_ondemand|safe }}
 
+    combined_time = {{ avg_combined_data|safe }}
+    avg_precache_time = {{ avg_precache|safe }}
+    avg_ondemand_time = {{ avg_ondemand|safe }}
+
     {% for row in avg_combined_time %}
         combined_time = combined_time.concat([{x: "{{row[0]}}", y: {{row[1]}}}]);
         {% if row[2] != None %}

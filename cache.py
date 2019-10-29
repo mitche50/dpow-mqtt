@@ -31,6 +31,10 @@ def init():
         print("hour list too short, initializing")
         hour_data = db.get_hour_list()
         populate_chart(hour_data, "hour")
+    if r.llen("avg_data") < 24:
+        print("avg list too short, initializing")
+        avg_data = db.get_avg()
+        populate_chart(avg_data, "avg")
 
 def populate_chart(data_dict, chart_name):
     print("populating {} data".format(chart_name))
@@ -57,6 +61,8 @@ if __name__ == "__main__":
         print("Hour difference greater than 1, setting data")
         hour_data = db.get_hour_list()
         populate_chart(hour_data, "hour")
+        avg_data = db.get_avg()
+        populate_chart(avg_data, "avg")
     day_difference = int(r.get("last_day")) - datetime.now().day
     if day_difference >= 1:
         print("Day difference greater than 1, setting data")
