@@ -67,74 +67,74 @@ avg_requests_min_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H:%i'), cou
 avg_requests_hour_call = ("SELECT date_format(response_ts, '%Y-%m-%d %H'), count(hash) FROM requests "
                           "WHERE response_ts >= NOW() - INTERVAL 24 hour "
                           "GROUP BY date_format(response_ts, '%Y-%m-%d %H');")
-pow_day_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
-                      "FROM "
-                      "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as overall "
-                      " FROM requests "
-                      " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t1 "
-                      "left join "
-                      "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as precache "
-                      " FROM requests "
-                      " WHERE work_type = 'precache' "
-                      " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t2 "
-                      " on t1.ts = t2.ts "
-                      " left join "
-                      " (SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as ondemand "
-                      " FROM requests  "
-                      " WHERE work_type = 'ondemand' "
-                      " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t3 "
-                      " on t1.ts = t3.ts ORDER BY ts ASC;")
-pow_hour_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
-                       "FROM "
-                       "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as overall "
-                       " FROM requests "
-                       " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t1 "
-                       "left join "
-                       "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as precache "
-                       " FROM requests "
-                       " WHERE work_type = 'precache' "
-                       " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t2 "
-                       " on t1.ts = t2.ts "
-                       " left join "
-                       " (SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as ondemand "
-                       " FROM requests  "
-                       " WHERE work_type = 'ondemand' "
-                       " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t3 "
-                       " on t1.ts = t3.ts ORDER BY ts ASC;")
-pow_minute_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
-                         "FROM "
-                         "(SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as overall "
-                         " FROM requests "
-                         " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t1 "
-                         "left join "
-                         "(SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as precache "
-                         " FROM requests "
-                         " WHERE work_type = 'precache' "
-                         " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t2 "
-                         " on t1.ts = t2.ts "
-                         " left join "
-                         " (SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as ondemand "
-                         " FROM requests  "
-                         " WHERE work_type = 'ondemand' "
-                         " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t3 "
-                         " on t1.ts = t3.ts ORDER BY ts ASC;")
-avg_combined_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
-                     "FROM "
-                     "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, avg(response_length) as overall "
-                     "FROM requests "
-                     "WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t1 "
-                     "left join "
-                     "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, avg(response_length) as precache "
-                     "FROM requests "
-                     "WHERE work_type = 'precache' "
-                     "AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t2 "
-                     "on t1.ts = t2.ts "
-                     "left join "
-                     "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, avg(response_length) as ondemand "
-                     "FROM requests "
-                     "WHERE work_type = 'ondemand' "
-                     "AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t3 "
-                     "on t1.ts = t3.ts ORDER BY ts ASC;")
+# pow_day_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
+#                       "FROM "
+#                       "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as overall "
+#                       " FROM requests "
+#                       " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t1 "
+#                       "left join "
+#                       "(SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as precache "
+#                       " FROM requests "
+#                       " WHERE work_type = 'precache' "
+#                       " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t2 "
+#                       " on t1.ts = t2.ts "
+#                       " left join "
+#                       " (SELECT date_format(response_ts, '%Y-%m-%d') as ts, count(work_type) as ondemand "
+#                       " FROM requests  "
+#                       " WHERE work_type = 'ondemand' "
+#                       " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 1 MONTH GROUP BY ts) as t3 "
+#                       " on t1.ts = t3.ts ORDER BY ts ASC;")
+# pow_hour_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
+#                        "FROM "
+#                        "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as overall "
+#                        " FROM requests "
+#                        " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t1 "
+#                        "left join "
+#                        "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as precache "
+#                        " FROM requests "
+#                        " WHERE work_type = 'precache' "
+#                        " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t2 "
+#                        " on t1.ts = t2.ts "
+#                        " left join "
+#                        " (SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, count(work_type) as ondemand "
+#                        " FROM requests  "
+#                        " WHERE work_type = 'ondemand' "
+#                        " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t3 "
+#                        " on t1.ts = t3.ts ORDER BY ts ASC;")
+# pow_minute_total_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
+#                          "FROM "
+#                          "(SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as overall "
+#                          " FROM requests "
+#                          " WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t1 "
+#                          "left join "
+#                          "(SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as precache "
+#                          " FROM requests "
+#                          " WHERE work_type = 'precache' "
+#                          " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t2 "
+#                          " on t1.ts = t2.ts "
+#                          " left join "
+#                          " (SELECT date_format(response_ts, '%Y-%m-%d %H:%i') as ts, count(work_type) as ondemand "
+#                          " FROM requests  "
+#                          " WHERE work_type = 'ondemand' "
+#                          " AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 60 MINUTE GROUP BY ts) as t3 "
+#                          " on t1.ts = t3.ts ORDER BY ts ASC;")
+# avg_combined_call = ("SELECT t1.ts, t1.overall, t2.precache, t3.ondemand "
+#                      "FROM "
+#                      "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, avg(response_length) as overall "
+#                      "FROM requests "
+#                      "WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t1 "
+#                      "left join "
+#                      "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, avg(response_length) as precache "
+#                      "FROM requests "
+#                      "WHERE work_type = 'precache' "
+#                      "AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t2 "
+#                      "on t1.ts = t2.ts "
+#                      "left join "
+#                      "(SELECT date_format(response_ts, '%Y-%m-%d %H') as ts, avg(response_length) as ondemand "
+#                      "FROM requests "
+#                      "WHERE work_type = 'ondemand' "
+#                      "AND response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR GROUP BY ts) as t3 "
+#                      "on t1.ts = t3.ts ORDER BY ts ASC;")
 avg_overall_call = ("SELECT avg(response_length) FROM requests "
                     "WHERE response_ts >= CURRENT_TIMESTAMP() - INTERVAL 24 HOUR")
 live_chart_call = "SELECT response_length FROM requests ORDER BY response_ts DESC LIMIT 25;"
@@ -204,11 +204,37 @@ def index():
     clients_table = db.get_db_data(clients_call)
 
     # Get info for POW charts
-    day_total = db.get_db_data(pow_day_total_call)
-    hour_total = db.get_db_data(pow_hour_total_call)
-    minute_total = db.get_db_data(pow_minute_total_call)
+    # day_total = db.get_db_data(pow_day_total_call)
+    # hour_total = db.get_db_data(pow_hour_total_call)
+    # minute_total = db.get_db_data(pow_minute_total_call)
 
-    avg_combined_time = db.get_db_data(avg_combined_call)
+    # avg_combined_time = db.get_db_data(avg_combined_call)
+
+    redis_minute_data, redis_minute_precache, redis_minute_ondemand = [], [], []
+    redis_hour_data, redis_hour_precache, redis_hour_ondemand = [], [], []
+    redis_day_data, redis_day_precache, redis_day_ondemand = [], [], []
+    redis_avg_data, redis_avg_precache, redis_avg_ondemand = [], [], []
+
+    for i in range(0, redisInst.llen("bpow_minute_data")):
+        redis_minute_data.append(json.loads(redisInst.lindex("bpow_minute_data", i).decode('utf-8')))
+        redis_minute_ondemand.append(json.loads(redisInst.lindex("bpow_minute_ondemand", i).decode('utf-8')))
+        redis_minute_precache.append(json.loads(redisInst.lindex("bpow_minute_precache", i).decode('utf-8')))
+    
+    for i in range(0, redisInst.llen("bpow_day_data")):
+        redis_day_data.append(json.loads(redisInst.lindex("bpow_day_data", i).decode('utf-8')))
+        redis_day_ondemand.append(json.loads(redisInst.lindex("bpow_day_ondemand", i).decode('utf-8')))
+        redis_day_precache.append(json.loads(redisInst.lindex("bpow_day_precache", i).decode('utf-8')))
+    
+    for i in range(0, redisInst.llen("bpow_hour_data")):
+        redis_hour_data.append(json.loads(redisInst.lindex("bpow_hour_data", i).decode('utf-8')))
+        redis_hour_ondemand.append(json.loads(redisInst.lindex("bpow_hour_ondemand", i).decode('utf-8')))
+        redis_hour_precache.append(json.loads(redisInst.lindex("bpow_hour_precache", i).decode('utf-8')))
+
+    for i in range(0, redisInst.llen("bpow_avg_data")):
+        redis_avg_data.append(json.loads(redisInst.lindex("bpow_avg_data", i).decode('utf-8')))
+        redis_avg_ondemand.append(json.loads(redisInst.lindex("bpow_avg_ondemand", i).decode('utf-8')))
+        redis_avg_precache.append(json.loads(redisInst.lindex("bpow_avg_precache", i).decode('utf-8')))
+
     avg_overall_data = db.get_db_data(avg_overall_call)
     avg_requests_data = db.get_db_data(avg_requests_call)
     avg_requests_min = db.get_db_data(avg_requests_min_call)
@@ -260,11 +286,14 @@ def index():
                            precache_ratio=precache_ratio, service_count=service_count, client_count=client_count,
                            listed_services=listed_services, unlisted_services=unlisted_services, work_24hr=work_24hr,
                            services_table=services_table, unlisted_count=unlisted_count, unlisted_pow=unlisted_pow,
-                           clients_table=clients_table, day_total=day_total, hour_total=hour_total,
-                           minute_total=minute_total, avg_overall=avg_overall, avg_combined_time=avg_combined_time,
+                           clients_table=clients_table, avg_overall=avg_overall,
                            total_distributed=total_paid_banano, requests_avg=requests_avg,
                            live_chart_prefill=live_chart_prefill, requests_avg_hour=requests_avg_hour,
-                           requests_avg_min=requests_avg_min)
+                           requests_avg_min=requests_avg_min,
+                           minute_data=redis_minute_data, minute_precache=redis_minute_precache, minute_ondemand=redis_minute_ondemand,
+                           hour_data=redis_hour_data, hour_precache=redis_hour_precache, hour_ondemand=redis_hour_ondemand,
+                           day_data=redis_day_data, day_precache=redis_day_precache, day_ondemand=redis_day_ondemand,
+                           avg_combined_data=redis_avg_data, avg_precache=redis_avg_precache, avg_ondemand=redis_avg_ondemand)
 
 
 if __name__ == "__main__":
