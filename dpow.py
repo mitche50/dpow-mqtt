@@ -138,19 +138,19 @@ def index():
         redis_minute_precache.append(json.loads(r.lindex("minute_precache", i)))
     
     for i in range(0, r.llen("day_data")):
-        redis_day_data.append(json.loads(r.lindex("day_data", i))
-        redis_day_ondemand.append(json.loads(r.lindex("day_ondemand", i))
-        redis_day_precache.append(json.loads(r.lindex("day_precache", i))
+        redis_day_data.append(json.loads(r.lindex("day_data", i)))
+        redis_day_ondemand.append(json.loads(r.lindex("day_ondemand", i)))
+        redis_day_precache.append(json.loads(r.lindex("day_precache", i)))
     
     for i in range(0, r.llen("hour_data")):
-        redis_hour_data.append(json.loads(r.lindex("hour_data", i))
-        redis_hour_ondemand.append(json.loads(r.lindex("hour_ondemand", i))
-        redis_hour_precache.append(json.loads(r.lindex("hour_precache", i))
+        redis_hour_data.append(json.loads(r.lindex("hour_data", i)))
+        redis_hour_ondemand.append(json.loads(r.lindex("hour_ondemand", i)))
+        redis_hour_precache.append(json.loads(r.lindex("hour_precache", i)))
 
     for i in range(0, r.llen("avg_data")):
-        redis_avg_data.append(json.loads(r.lindex("avg_data", i))
-        redis_avg_ondemand.append(json.loads(r.lindex("avg_ondemand", i))
-        redis_avg_precache.append(json.loads(r.lindex("avg_precache", i))
+        redis_avg_data.append(json.loads(r.lindex("avg_data", i)))
+        redis_avg_ondemand.append(json.loads(r.lindex("avg_ondemand", i)))
+        redis_avg_precache.append(json.loads(r.lindex("avg_precache", i)))
 
     avg_combined_time = db.get_avg()
     avg_overall_data = db.get_db_data(avg_overall_call)
