@@ -5,3 +5,4 @@ mysqlclient
 paho-mqtt
 redis
 requests
+simplejson

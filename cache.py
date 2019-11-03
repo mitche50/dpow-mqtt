@@ -1,6 +1,6 @@
 #!/home/mitche50/dpow-mqtt/venv/bin/python3
 
-import json
+import simplejson as json
 import redis
 import modules.db as db
 
