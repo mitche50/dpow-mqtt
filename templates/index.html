@@ -368,20 +368,6 @@ $( document ).ready(function() {
     avg_precache_time = {{ avg_precache|safe }}
     avg_ondemand_time = {{ avg_ondemand|safe }}
 
-    {% for row in avg_combined_time %}
-        combined_time = combined_time.concat([{x: "{{row[0]}}", y: {{row[1]}}}]);
-        {% if row[2] != None %}
-            avg_precache_time = avg_precache_time.concat([{x: "{{row[0]}}", y: {{row[2]}}}]);
-        {% else %}
-            avg_precache_time = avg_precache_time.concat([{x: "{{row[0]}}", y: 0}]);
-        {% endif %}
-        {% if row[3] != None %}
-            avg_ondemand_time = avg_ondemand_time.concat([{x: "{{row[0]}}", y: {{row[3]}}}]);
-        {% else %}
-            avg_ondemand_time = avg_ondemand_time.concat([{x: "{{row[0]}}", y: 0}]);
-        {% endif %}
-    {% endfor %}
-
     var avg_data = hour_data;
     var avg_precache_table = hour_precache_table;
     var avg_ondemand_table = hour_ondemand_table;
