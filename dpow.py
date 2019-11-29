@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import Flask, render_template
 from logging.handlers import TimedRotatingFileHandler
 
+import configparser
 import json
 import logging
 import os
@@ -9,6 +10,9 @@ import redis
 import requests
 
 import modules.db as db
+
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 logger = logging.getLogger("dpow_log")
 logger.setLevel(logging.INFO)
@@ -21,7 +25,11 @@ logger.addHandler(handler)
 
 app = Flask(__name__)
 
-r = redis.Redis('localhost')
+REDIS_HOST = config.get('redis', 'host')
+REDIS_PORT = config.get('redis', 'port')
+REDIS_PW = config.get('redis', 'pw')
+
+r = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PW) 
 
 pow_count_call = "SELECT count(hash) FROM requests WHERE response_ts >= NOW() - INTERVAL 24 HOUR;"
 pow_ratio_call = ("SELECT work_type, count(work_type) FROM requests"

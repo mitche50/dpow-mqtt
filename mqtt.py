@@ -34,6 +34,7 @@ MQTT_PORT = int(config.get('pow', 'mqtt_port'))
 REDIS_HOST = config.get('redis', 'host')
 REDIS_PORT = int(config.get('redis', 'port'))
 REDIS_DB = int(config.get('redis', 'db'))
+REDIS_PW = config.get('redis','pw')
 
 
 def get_work_mult():
@@ -63,7 +64,7 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     try:
-        r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
+        r = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, password=REDIS_PW)
         topic = msg.topic
         topic = topic.split('/')
         if topic[0] == 'work':
