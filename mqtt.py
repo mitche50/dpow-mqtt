@@ -1,4 +1,4 @@
-#!/home/mitche50/dpow-mqtt/venv/bin/python3
+#!/home/dpow/dpow-mqtt/venv/bin/python3
 
 from datetime import datetime
 from logging.handlers import TimedRotatingFileHandler
