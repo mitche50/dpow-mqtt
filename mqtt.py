@@ -93,8 +93,8 @@ def on_message(client, userdata, msg):
 
             if work_difficulty != 'ffffffc000000000':
                 # Add work multiplier logic for V19
-                # work_multiplier = get_work_mult()
-                work_multiplier = "1"
+                work_multiplier = get_work_mult()
+                # work_multiplier = "1"
             else:
                 work_multiplier = "1"
 
