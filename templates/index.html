@@ -298,12 +298,8 @@ $( document ).ready(function() {
                         <tr class="client_tr">
                             <td class="client_td"><b>{{loop.index}}</b></td>
                             <td style="text-align: center;"><a href="https://nanocrawler.cc/explorer/account/{{row[0]}}"><u>{{row[0][:10]}}...{{row[0][-5:]}}</u></a></td>
-                            {% if row[1] %}
-                            <td class="client_td">{{row[2]}}</td>
-                            {% else %}
-                            <td class="client_td">0</td>
-                            {% endif %}
-                            <td class="client_td">{{row[1]}}</td>
+                            <td class="client_td">{{row[2] ? row[2] : 0}}</td>
+                            <td class="client_td">{{row[1] ? row[1] : 0}}</td>
                         </tr>
                         {% endfor %}
                         </tbody>
