@@ -1,12 +1,23 @@
-#!/home/mitche50/dpow-mqtt/venv/bin/python3
+#!/home/dpow/dpow-mqtt/venv/bin/python3
 
+import configparser
+import os
 import simplejson as json
 import redis
 import modules.db as db
 
 from datetime import datetime
 
-r = redis.Redis('localhost')
+# Read config and parse constants
+config = configparser.ConfigParser()
+config.read('{}/config.ini'.format(os.getcwd()))
+
+REDIS_HOST = config.get('redis', 'host')
+REDIS_PORT = int(config.get('redis', 'port'))
+REDIS_DB = int(config.get('redis', 'db'))
+REDIS_PW = config.get('redis','pw')
+
+r = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, password=REDIS_PW)
 
 def init():
     # Initialize the last hours / minutes that were updated
