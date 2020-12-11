@@ -68,18 +68,21 @@ if __name__ == "__main__":
     init()
 
     hour_difference = int(r.get("last_hour")) - datetime.now().hour
-    if hour_difference >= 1:
+    print(hour_difference)
+    if hour_difference <= 1:
         print("Hour difference greater than 1, setting data")
         hour_data = db.get_hour_list()
         populate_chart(hour_data, "hour")
         avg_data = db.get_avg()
         populate_chart(avg_data, "avg")
     day_difference = int(r.get("last_day")) - datetime.now().day
+    print(day_difference)
     if day_difference >= 1:
         print("Day difference greater than 1, setting data")
         day_data = db.get_day_list()
         populate_chart(day_data, "day")
     minute_difference = int(r.get("last_minute")) - datetime.now().minute
+    print(minute_difference)
     if minute_difference >= 1:
         print("Minute difference greater than 1, setting data")
         minute_data = db.get_minute_list()
